@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>711</width>
+    <height>465</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <widget class="QWidget" name="horizontalLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>-1</x>
+      <y>-1</y>
+      <width>711</width>
+      <height>411</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QTextEdit" name="textEditOut">
+       <property name="font">
+        <font>
+         <family>Consolas</family>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="tabStopWidth">
+        <number>48</number>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QTextEdit" name="textEditIn">
+       <property name="font">
+        <font>
+         <family>Consolas</family>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="tabStopWidth">
+        <number>48</number>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QTextEdit" name="textEditCompere">
+       <property name="font">
+        <font>
+         <family>Consolas</family>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="tabStopWidth">
+        <number>48</number>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>711</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>Кадры</string>
+    </property>
+    <addaction name="actionFrameOut"/>
+   </widget>
+   <widget class="QMenu" name="menu_2">
+    <property name="title">
+     <string>Интерфейсы</string>
+    </property>
+    <addaction name="actionUsbSettings"/>
+    <addaction name="actionEhtTSettings"/>
+    <addaction name="actionEhtRSettings"/>
+   </widget>
+   <addaction name="menu"/>
+   <addaction name="menu_2"/>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar">
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionSaveAll"/>
+   <addaction name="actionEthStart"/>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionFrameOut">
+   <property name="text">
+    <string>Выходной кадр</string>
+   </property>
+   <property name="toolTip">
+    <string>Настройка кадра отправляемого на устройство</string>
+   </property>
+  </action>
+  <action name="actionSaveAll">
+   <property name="text">
+    <string>Сохранить все</string>
+   </property>
+   <property name="toolTip">
+    <string>Сохранить входные и выходные файлы</string>
+   </property>
+  </action>
+  <action name="actionUsbSettings">
+   <property name="text">
+    <string>Настройка USB</string>
+   </property>
+   <property name="toolTip">
+    <string>Выбор и настройка USB портов и устройств</string>
+   </property>
+  </action>
+  <action name="actionEhtTSettings">
+   <property name="text">
+    <string>Настройка EthT</string>
+   </property>
+   <property name="toolTip">
+    <string>Настройка Ethernet передатчика</string>
+   </property>
+  </action>
+  <action name="actionEhtRSettings">
+   <property name="text">
+    <string>Настройка EthR</string>
+   </property>
+   <property name="toolTip">
+    <string>Настройка Ethernet приемника</string>
+   </property>
+  </action>
+  <action name="actionEthStart">
+   <property name="text">
+    <string>Передача по Eth</string>
+   </property>
+   <property name="toolTip">
+    <string>Начать передачу по Ethernet</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections/>
+</ui>
