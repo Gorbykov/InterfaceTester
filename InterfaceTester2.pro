@@ -32,7 +32,6 @@ SOURCES += \
     frameIn.cpp \
     usbdevicecontroller.cpp \
     usbsettingswindow.cpp \
-    ethr.cpp \
     ethrsettingswindow.cpp
 
 HEADERS += \
@@ -43,23 +42,16 @@ HEADERS += \
     framesettingswindow.h \
     usbdevicecontroller.h \
     usbsettingswindow.h \
-    ethr.h \
     ethrsettingswindow.h
 
 FORMS += \
      mainwindow.ui \
      framesettingswindow.ui \
-    usbsettingswindow.ui \
-    ethrsettingswindow.ui
+    usbsettingswindow.ui
 
 QT += network
-
-
-unix|win32: LIBS += -L$$PWD/libusb/static/ -llibusb-1.0
-
-INCLUDEPATH += $$PWD/libusb/include
-DEPENDPATH += $$PWD/libusb/include
-
-win32:!win32-g++: PRE_TARGETDEPS += $$PWD/libusb/static/libusb-1.0.lib
-else:unix|win32-g++: PRE_TARGETDEPS += $$PWD/libusb/static/libusb-1.0.a
-
+greaterThan(QT_MAJOR_VERSION, 4) {
+    QT       += widgets serialport
+} else {
+    include($$QTSERIALPORT_PROJECT_ROOT/src/serialport/qt4support/serialport.prf)
+}

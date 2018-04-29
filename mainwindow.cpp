@@ -69,6 +69,4 @@ void MainWindow::on_actionEhtTSettings_triggered()
 
 void MainWindow::on_actionEhtRSettings_triggered()
 {
-    ethR = new EthR(this);
-    ethR->show();
 }

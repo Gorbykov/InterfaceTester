@@ -1,7 +1,9 @@
 #ifndef USBDEVICECONTROLLER_H
 #define USBDEVICECONTROLLER_H
-#include <libusb.h>
 #include <QtCore>
+#include <QtSerialPort/QSerialPortInfo>
+#include <QtSerialPort/QtSerialPort>
+
 
 class UsbDeviceController
 {
@@ -10,13 +12,11 @@ public:
     ~UsbDeviceController();
     int startSession();
     void endSession();
-    QVector<libusb_device*> getDeviceList();
+    QList<QSerialPortInfo> getDeviceList();
 
 
 private:
-    QVector<libusb_device*> _deviceList;
-    libusb_context* _context = NULL;
-
+    QList<QSerialPortInfo> _deviceList;
 };
 
 #endif // USBDEVICECONTROLLER_H

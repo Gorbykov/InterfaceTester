@@ -10,7 +10,6 @@
 #include "frameIn.h"
 #include "frameOut.h"
 #include "usbdevicecontroller.h"
-#include "ethr.h"
 
 namespace Ui {
 class MainWindow;
@@ -47,7 +46,6 @@ private:
     Ui::MainWindow *ui;
     FrameSettingsWindow *frameOutSettings = NULL;
     UsbSettingsWindow *usbSettingsWindow = NULL;
-    EthR *ethR = NULL;
     UsbDeviceController *usbDeviceController = NULL;
 
 };

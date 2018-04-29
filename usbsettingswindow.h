@@ -2,8 +2,9 @@
 #define USBSETTINGSWINDOW_H
 
 #include <QDialog>
+#include <QtSerialPort/QSerialPortInfo>
+#include <QtSerialPort/QtSerialPort>
 #include "usbdevicecontroller.h"
-#include "libusb.h"
 
 namespace Ui {
 class UsbSettingsWindow;
