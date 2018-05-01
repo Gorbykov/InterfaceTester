@@ -30,6 +30,10 @@ void MainWindow::setFrameOut(Frame *newFrame)
     ui->textEditOut->setText(currentFrameOut->getData().toHex(' '));
 }
 
+void::MainWindow::setUSB(QSerialPort *newPort)
+{
+    currentSerialPort =  newPort;
+}
 
 void MainWindow::on_actionSaveAll_triggered()
 {
@@ -69,4 +73,10 @@ void MainWindow::on_actionEhtTSettings_triggered()
 
 void MainWindow::on_actionEhtRSettings_triggered()
 {
+}
+
+void MainWindow::on_actionUSBStart_triggered()
+{
+    currentSerialPort->open(QIODevice::ReadWrite);
+    currentSerialPort->write(currentFrameOut->getData());
 }

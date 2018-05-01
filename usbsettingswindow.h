@@ -21,6 +21,9 @@ public:
 private slots:
     void on_buttonBox_accepted();
 
+signals:
+    void setUSB(QSerialPort *newPort);
+
 private:
     Ui::UsbSettingsWindow *ui;
     UsbDeviceController* _usbController=NULL;

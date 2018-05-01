@@ -101,6 +101,7 @@
    </attribute>
    <addaction name="actionSaveAll"/>
    <addaction name="actionEthStart"/>
+   <addaction name="actionUSBStart"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionFrameOut">
@@ -149,6 +150,14 @@
    </property>
    <property name="toolTip">
     <string>Начать передачу по Ethernet</string>
+   </property>
+  </action>
+  <action name="actionUSBStart">
+   <property name="text">
+    <string>Передача по USB</string>
+   </property>
+   <property name="toolTip">
+    <string>Начать передачу по USB</string>
    </property>
   </action>
  </widget>

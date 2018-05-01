@@ -19,7 +19,7 @@ int UsbDeviceController::startSession()
 
 QList<QSerialPortInfo> UsbDeviceController::getDeviceList()
 {
-    return _deviceList;
+    return _deviceList = QSerialPortInfo::availablePorts();
 }
 
 void UsbDeviceController::endSession()

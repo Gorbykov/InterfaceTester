@@ -27,9 +27,11 @@ public:
     QMap<QString, FrameIn*> framesIn;
     FrameOut *currentFrameOut = NULL;
     FrameIn *currentFrameIn = NULL;
+    QSerialPort *currentSerialPort = NULL;
 
 public slots:
     void setFrameOut(Frame *newFrame);
+    void setUSB(QSerialPort *newPort);
 
 private slots:
     void on_actionFrameOut_triggered();
@@ -41,6 +43,8 @@ private slots:
     void on_actionEhtTSettings_triggered();
 
     void on_actionEhtRSettings_triggered();
+
+    void on_actionUSBStart_triggered();
 
 private:
     Ui::MainWindow *ui;
