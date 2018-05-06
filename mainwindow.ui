@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>711</width>
-    <height>465</height>
+    <width>1049</width>
+    <height>533</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,8 +19,8 @@
      <rect>
       <x>-1</x>
       <y>-1</y>
-      <width>711</width>
-      <height>411</height>
+      <width>1041</width>
+      <height>461</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout">
@@ -63,6 +63,33 @@
        </property>
       </widget>
      </item>
+     <item>
+      <widget class="QGroupBox" name="settingBox">
+       <property name="title">
+        <string>Настиройки вида</string>
+       </property>
+       <widget class="QComboBox" name="charView">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>20</y>
+          <width>91</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <item>
+         <property name="text">
+          <string>HEX</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>ASCII</string>
+         </property>
+        </item>
+       </widget>
+      </widget>
+     </item>
     </layout>
    </widget>
   </widget>
@@ -71,7 +98,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>711</width>
+     <width>1049</width>
      <height>21</height>
     </rect>
    </property>

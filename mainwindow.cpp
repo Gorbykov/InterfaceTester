@@ -37,21 +37,41 @@ void::MainWindow::setUSB(QSerialPort *newPort)
 
 void MainWindow::on_actionSaveAll_triggered()
 {
+    QString viewType = ui->charView->currentText();
+
     if (currentFrameOut == NULL)
     {
         return;
     }
     QString inStr = ui->textEditOut->toPlainText();
-    inStr.remove(QRegExp("[^{0-9a-fA-F}]*"));
-    if (inStr.length()%2 == 1)
+
+    if (lastViewType == "HEX")
     {
-        QChar lastChar = inStr.back();
-        inStr.back() = '0';
-        inStr.append(lastChar);
+        inStr.remove(QRegExp("[^{0-9a-fA-F}]*"));
+        if (inStr.length()%2 == 1)
+        {
+            QChar lastChar = inStr.back();
+            inStr.back() = '0';
+            inStr.append(lastChar);
+        }
+        currentFrameOut->setData(QByteArray::fromHex(inStr.toUtf8()));
+        currentFrameOut->saveFile();
     }
-    currentFrameOut->setData(QByteArray::fromHex(inStr.toUtf8()));
-    currentFrameOut->saveFile();    
-    ui->textEditOut->setText(currentFrameOut->getData().toHex(' '));
+    else if(lastViewType == "ASCII")
+    {
+        currentFrameOut->setData(inStr.toUtf8());
+        currentFrameOut->saveFile();
+    }
+    if(viewType=="HEX")
+    {
+        ui->textEditOut->setText(currentFrameOut->getData().toHex(' '));
+    }
+    else if(viewType=="ASCII")
+    {
+        ui->textEditOut->setText(currentFrameOut->getData());
+    }
+    lastViewType = viewType;
+
 }
 
 
@@ -77,6 +97,7 @@ void MainWindow::on_actionEhtRSettings_triggered()
 
 void MainWindow::on_actionUSBStart_triggered()
 {
-    currentSerialPort->open(QIODevice::ReadWrite);
+    currentSerialPort->open(QIODevice::WriteOnly);
     currentSerialPort->write(currentFrameOut->getData());
+    currentSerialPort->close();
 }

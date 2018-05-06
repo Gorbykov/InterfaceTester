@@ -28,6 +28,7 @@ public:
     FrameOut *currentFrameOut = NULL;
     FrameIn *currentFrameIn = NULL;
     QSerialPort *currentSerialPort = NULL;
+    QString lastViewType = "HEX";
 
 public slots:
     void setFrameOut(Frame *newFrame);
