@@ -27,12 +27,12 @@ public:
     QMap<QString, FrameIn*> framesIn;
     FrameOut *currentFrameOut = NULL;
     FrameIn *currentFrameIn = NULL;
-    QSerialPort *currentSerialPort = NULL;
     QString lastViewType = "HEX";
 
 public slots:
     void setFrameOut(Frame *newFrame);
     void setUSB(QSerialPort *newPort);
+    //void refreshIn();
 
 private slots:
     void on_actionFrameOut_triggered();

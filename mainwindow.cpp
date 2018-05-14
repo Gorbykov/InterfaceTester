@@ -8,6 +8,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
 }
 
 MainWindow::~MainWindow()
@@ -32,7 +33,7 @@ void MainWindow::setFrameOut(Frame *newFrame)
 
 void::MainWindow::setUSB(QSerialPort *newPort)
 {
-    currentSerialPort =  newPort;
+    usbDeviceController->setDevice(newPort);
 }
 
 void MainWindow::on_actionSaveAll_triggered()
@@ -79,7 +80,7 @@ void MainWindow::on_actionUsbSettings_triggered()
 {
     if  (usbDeviceController == NULL)
     {
-        usbDeviceController = new UsbDeviceController();
+        usbDeviceController = new UsbDeviceController(this->ui->textEditOut);
     }
     usbSettingsWindow = new UsbSettingsWindow(this, usbDeviceController);
     usbSettingsWindow->setWindowTitle("Настройка USB");
@@ -97,7 +98,10 @@ void MainWindow::on_actionEhtRSettings_triggered()
 
 void MainWindow::on_actionUSBStart_triggered()
 {
-    currentSerialPort->open(QIODevice::WriteOnly);
-    currentSerialPort->write(currentFrameOut->getData());
-    currentSerialPort->close();
+    usbDeviceController->startSession();
+
+    usbDeviceController->write(currentFrameOut->getData());
+    //usbDeviceController->read(currentFrameIn);
+    //usbDeviceController->endSession();
+    //currentSerialPort->close();
 }
