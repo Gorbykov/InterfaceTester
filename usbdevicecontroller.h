@@ -18,7 +18,7 @@ public:
 
     UsbDeviceController(QTextEdit *textEdit);
     ~UsbDeviceController();
-    int startSession();
+    bool startSession();
     void endSession();
     QSerialPort* getDevice();
     QByteArray* read(FrameIn* currentFrameIn);

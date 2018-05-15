@@ -25,6 +25,7 @@ UsbSettingsWindow::~UsbSettingsWindow()
 void UsbSettingsWindow::on_buttonBox_accepted()
 {
     QSerialPort *newPort = new QSerialPort(ui->comboBoxDevicecList->currentText());
+    newPort->setBaudRate(QSerialPort::Baud9600);
     emit setUSB(newPort);
     emit close();
 }

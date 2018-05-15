@@ -98,10 +98,11 @@ void MainWindow::on_actionEhtRSettings_triggered()
 
 void MainWindow::on_actionUSBStart_triggered()
 {
-    usbDeviceController->startSession();
-
-    usbDeviceController->write(currentFrameOut->getData());
+    if (usbDeviceController->startSession())
+    {
+        usbDeviceController->write(currentFrameOut->getData());
+    }
     //usbDeviceController->read(currentFrameIn);
-    //usbDeviceController->endSession();
+    usbDeviceController->endSession();
     //currentSerialPort->close();
 }
