@@ -30,13 +30,13 @@ public:
     QString lastViewType = "HEX";
 
 public slots:
-    void setFrameOut(Frame *newFrame);
+    void setFrameOut(FrameOut *newFrame);
+    void setFrameIn(FrameIn *newFrame);
     void setUSB(QSerialPort *newPort);
     void closeUSB();
     //void refreshIn();
 
 private slots:
-    void on_actionFrameOut_triggered();
 
     void on_actionSaveAll_triggered();
 
@@ -48,11 +48,18 @@ private slots:
 
     void on_actionUSBStart_triggered();
 
+    void on_actionFrame_triggered();
+
+    void on_charView_currentIndexChanged(const QString &arg1);
+
 private:
     Ui::MainWindow *ui;
     FrameSettingsWindow *frameOutSettings = NULL;
     UsbSettingsWindow *usbSettingsWindow = NULL;
     UsbDeviceController *usbDeviceController = NULL;
+
+    void printToTextEdit(QByteArray text, QTextEdit *textEdit);
+    QByteArray scanFromTextEdit(QTextEdit *textEdit);
 
 };
 

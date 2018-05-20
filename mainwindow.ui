@@ -163,12 +163,6 @@
      <height>21</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menu">
-    <property name="title">
-     <string>Кадры</string>
-    </property>
-    <addaction name="actionFrame"/>
-   </widget>
    <widget class="QMenu" name="menu_2">
     <property name="title">
      <string>Интерфейсы</string>
@@ -177,7 +171,6 @@
     <addaction name="actionEhtTSettings"/>
     <addaction name="actionEhtRSettings"/>
    </widget>
-   <addaction name="menu"/>
    <addaction name="menu_2"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
@@ -187,6 +180,7 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionFrame"/>
    <addaction name="actionSaveAll"/>
    <addaction name="actionEthStart"/>
    <addaction name="actionUSBStart"/>

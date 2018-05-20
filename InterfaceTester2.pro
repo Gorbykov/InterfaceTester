@@ -30,7 +30,8 @@ SOURCES += \
     framesettingswindow.cpp \
     frameIn.cpp \
     usbdevicecontroller.cpp \
-    usbsettingswindow.cpp
+    usbsettingswindow.cpp \
+    ethernetsettingwindow.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -39,12 +40,14 @@ HEADERS += \
     frameOut.h \
     framesettingswindow.h \
     usbdevicecontroller.h \
-    usbsettingswindow.h
+    usbsettingswindow.h \
+    ethernetsettingwindow.h
 
 FORMS += \
      mainwindow.ui \
      framesettingswindow.ui \
-    usbsettingswindow.ui
+    usbsettingswindow.ui \
+    ethernetsettingwindow.ui
 
 QT += network
 greaterThan(QT_MAJOR_VERSION, 4) {

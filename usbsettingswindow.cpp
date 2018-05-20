@@ -1,7 +1,6 @@
 #include "usbsettingswindow.h"
 #include "ui_usbsettingswindow.h"
 #include <QMessageBox>
-#include <cstring>
 
 UsbSettingsWindow::UsbSettingsWindow(QWidget *parent, UsbDeviceController *usbController) :
     QDialog(parent),

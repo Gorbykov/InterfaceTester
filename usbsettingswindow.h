@@ -15,7 +15,7 @@ class UsbSettingsWindow : public QDialog
     Q_OBJECT
 
 public:
-    explicit UsbSettingsWindow(QWidget *parent = 0, UsbDeviceController *usbController = NULL);
+    explicit UsbSettingsWindow(QWidget *parent = 0, UsbDeviceController *usbController = nullptr);
     ~UsbSettingsWindow();
 
 private slots:

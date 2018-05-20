@@ -16,21 +16,22 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::on_actionFrameOut_triggered()
-{
-    frameOutSettings = new FrameSettingsWindow(this,currentFrameOut);
-    frameOutSettings->setWindowTitle("Настройка выходного кадра");
-    frameOutSettings->show();
-}
 
-void MainWindow::setFrameOut(Frame *newFrame)
+void MainWindow::setFrameOut(FrameOut *newFrame)
 {
-    FrameOut *currFrame = new FrameOut(newFrame->getFrameName(), newFrame->getFileName(), newFrame->getSize(), newFrame->getDelay());
+    FrameOut *currFrame = newFrame;
     framesOut.value(newFrame->getFrameName(),currFrame);
     currentFrameOut = currFrame;
-    ui->textEditOut->setText(currentFrameOut->getData().toHex(' '));
+    printToTextEdit(currFrame->getData(),ui->textEditOut);
 }
 
+void MainWindow::setFrameIn(FrameIn *newFrame)
+{
+    FrameIn *currFrame = newFrame;
+    framesIn.value(newFrame->getFrameName(),currFrame);
+    currentFrameIn = currFrame;
+    printToTextEdit(currFrame->getData(),ui->textEditIn);
+}
 void::MainWindow::setUSB(QSerialPort *newPort)
 {
     usbDeviceController->setDevice(newPort);
@@ -42,7 +43,8 @@ void::MainWindow::closeUSB()
     usbDeviceController->endSession();
 }
 
-void MainWindow::on_actionSaveAll_triggered()
+
+void MainWindow::printToTextEdit(QByteArray text, QTextEdit *textEdit)
 {
     QString viewType = ui->charView->currentText();
 
@@ -50,8 +52,22 @@ void MainWindow::on_actionSaveAll_triggered()
     {
         return;
     }
-    QString inStr = ui->textEditOut->toPlainText();
 
+    if(viewType=="HEX")
+    {
+        textEdit->setText(text.toHex(' '));
+    }
+    else if(viewType=="ASCII")
+    {
+        ui->textEditOut->setText(text);
+    }
+    lastViewType = viewType;
+}
+
+QByteArray MainWindow::scanFromTextEdit(QTextEdit *textEdit)
+{
+    QByteArray text;
+    QString inStr = textEdit->toPlainText();
     if (lastViewType == "HEX")
     {
         inStr.remove(QRegExp("[^{0-9a-fA-F}]*"));
@@ -61,23 +77,21 @@ void MainWindow::on_actionSaveAll_triggered()
             inStr.back() = '0';
             inStr.append(lastChar);
         }
-        currentFrameOut->setData(QByteArray::fromHex(inStr.toUtf8()));
-        currentFrameOut->saveFile();
+        text = QByteArray::fromHex(inStr.toUtf8());
     }
     else if(lastViewType == "ASCII")
     {
-        currentFrameOut->setData(inStr.toUtf8());
-        currentFrameOut->saveFile();
+        text = inStr.toUtf8();
     }
-    if(viewType=="HEX")
-    {
-        ui->textEditOut->setText(currentFrameOut->getData().toHex(' '));
-    }
-    else if(viewType=="ASCII")
-    {
-        ui->textEditOut->setText(currentFrameOut->getData());
-    }
-    lastViewType = viewType;
+    return text;
+}
+
+void MainWindow::on_actionSaveAll_triggered()
+{
+    QByteArray text = scanFromTextEdit(ui->textEditOut);
+    printToTextEdit(text,ui->textEditOut);
+    currentFrameOut->setData(text);
+    currentFrameOut->saveFile();
 
 }
 
@@ -110,4 +124,16 @@ void MainWindow::on_actionUSBStart_triggered()
         //usbDeviceController->read(currentFrameIn);
         //currentSerialPort->close();
     }
+}
+
+void MainWindow::on_actionFrame_triggered()
+{
+    frameOutSettings = new FrameSettingsWindow(this,currentFrameIn,currentFrameOut);
+    frameOutSettings->setWindowTitle("Настройка кадров");
+    frameOutSettings->show();
+}
+
+void MainWindow::on_charView_currentIndexChanged(const QString &arg1)
+{
+    printToTextEdit(scanFromTextEdit(ui->textEditOut),ui->textEditOut);
 }
