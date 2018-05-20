@@ -6,134 +6,160 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>778</width>
-    <height>525</height>
+    <width>793</width>
+    <height>555</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QWidget" name="horizontalLayoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>-1</x>
-      <y>-1</y>
-      <width>771</width>
-      <height>461</height>
-     </rect>
-    </property>
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <property name="sizeConstraint">
-      <enum>QLayout::SetDefaultConstraint</enum>
-     </property>
-     <item>
-      <widget class="QTextEdit" name="textEditOut">
-       <property name="font">
-        <font>
-         <family>Consolas</family>
-         <pointsize>12</pointsize>
-        </font>
-       </property>
-       <property name="tabStopWidth">
-        <number>48</number>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QTextEdit" name="textEditIn">
-       <property name="font">
-        <font>
-         <family>Consolas</family>
-         <pointsize>12</pointsize>
-        </font>
-       </property>
-       <property name="tabStopWidth">
-        <number>48</number>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QTextEdit" name="textEditCompere">
-       <property name="font">
-        <font>
-         <family>Consolas</family>
-         <pointsize>12</pointsize>
-        </font>
-       </property>
-       <property name="tabStopWidth">
-        <number>48</number>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QGroupBox" name="settingBox">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="title">
-        <string>Настиройки вида</string>
-       </property>
-       <widget class="QComboBox" name="charView">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>20</y>
-          <width>91</width>
-          <height>21</height>
-         </rect>
-        </property>
-        <item>
-         <property name="text">
-          <string>HEX</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>ASCII</string>
-         </property>
-        </item>
-       </widget>
-       <widget class="QGroupBox" name="groupBox">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>60</y>
-          <width>91</width>
-          <height>80</height>
-         </rect>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="QTextEdit" name="textEditOut">
+      <property name="font">
+       <font>
+        <family>Consolas</family>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="tabStopWidth">
+       <number>48</number>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QTextEdit" name="textEditIn">
+      <property name="font">
+       <font>
+        <family>Consolas</family>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="tabStopWidth">
+       <number>48</number>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QTextEdit" name="textEditCompere">
+      <property name="font">
+       <font>
+        <family>Consolas</family>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="tabStopWidth">
+       <number>48</number>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <layout class="QVBoxLayout" name="verticalLayout_2">
+      <item>
+       <widget class="QGroupBox" name="settingBox">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
         </property>
         <property name="title">
-         <string>GroupBox</string>
+         <string>Настиройки вида</string>
         </property>
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <item>
+          <widget class="QComboBox" name="charView">
+           <item>
+            <property name="text">
+             <string>HEX</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>ASCII</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+        </layout>
        </widget>
-       <widget class="QGroupBox" name="groupBox_2">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>150</y>
-          <width>91</width>
-          <height>80</height>
-         </rect>
-        </property>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="groupIn">
         <property name="title">
-         <string>GroupBox</string>
+         <string>Вход</string>
         </property>
+        <layout class="QVBoxLayout" name="verticalLayout_3">
+         <item>
+          <widget class="QRadioButton" name="radioButtonUsbIn">
+           <property name="text">
+            <string>USB</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QRadioButton" name="radioButtonEthIn">
+           <property name="text">
+            <string>Ethernet</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </widget>
-      </widget>
-     </item>
-    </layout>
-   </widget>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="groupOut">
+        <property name="title">
+         <string>Выход</string>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_4">
+         <item>
+          <widget class="QRadioButton" name="radioButtonUsbOut">
+           <property name="text">
+            <string>USB</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QRadioButton" name="radioEthOut">
+           <property name="text">
+            <string>Ethernet</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <spacer name="verticalSpacer">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>778</width>
+     <width>793</width>
      <height>21</height>
     </rect>
    </property>
@@ -141,7 +167,7 @@
     <property name="title">
      <string>Кадры</string>
     </property>
-    <addaction name="actionFrameOut"/>
+    <addaction name="actionFrame"/>
    </widget>
    <widget class="QMenu" name="menu_2">
     <property name="title">
@@ -166,12 +192,12 @@
    <addaction name="actionUSBStart"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
-  <action name="actionFrameOut">
+  <action name="actionFrame">
    <property name="text">
-    <string>Выходной кадр</string>
+    <string>Кадры</string>
    </property>
    <property name="toolTip">
-    <string>Настройка кадра отправляемого на устройство</string>
+    <string>Настройка кадров передоваемых и получаемых с устройства</string>
    </property>
   </action>
   <action name="actionSaveAll">
@@ -220,6 +246,14 @@
    </property>
    <property name="toolTip">
     <string>Начать передачу по USB</string>
+   </property>
+  </action>
+  <action name="actionFrameIn">
+   <property name="text">
+    <string>Входной кадр</string>
+   </property>
+   <property name="toolTip">
+    <string>Настройка кадра получаемого с устройства</string>
    </property>
   </action>
  </widget>

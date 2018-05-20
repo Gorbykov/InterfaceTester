@@ -155,3 +155,8 @@ int Frame::getSize()
 {
 	return _size;
 }
+
+bool Frame::isEmpty()
+{
+    return _data.isEmpty();
+}

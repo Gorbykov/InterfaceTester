@@ -16,10 +16,11 @@ UsbDeviceController::~UsbDeviceController()
 
 bool UsbDeviceController::startSession()
 {
-   //connect(_currentSerialPort, &QSerialPort::errorOccurred, this, &UsbDeviceController::handleError);
+    connect(_currentSerialPort, &QSerialPort::readyRead, this, &UsbDeviceController::handleReadyRead);
+    //connect(_currentSerialPort, &QSerialPort::errorOccurred, this, &UsbDeviceController::handleError);
     if (_currentSerialPort!=nullptr)
     {
-       return _currentSerialPort->open(QIODevice::WriteOnly);
+        return _currentSerialPort->open(QIODevice::WriteOnly);
     }
     return false;
 }
@@ -34,8 +35,11 @@ QList<QSerialPortInfo> UsbDeviceController::getDeviceList()
 
 void UsbDeviceController::endSession()
 {
-    //disconnect(_currentSerialPort, &QSerialPort::readyRead, this, &UsbDeviceController::handleReadyRead);
-    _currentSerialPort->close();
+    disconnect(_currentSerialPort, &QSerialPort::readyRead, this, &UsbDeviceController::handleReadyRead);
+    if(_currentSerialPort!=nullptr )
+    {
+        _currentSerialPort->close();
+    }
 }
 
 void UsbDeviceController::setDevice(QSerialPort *dev)
@@ -51,7 +55,10 @@ QSerialPort* UsbDeviceController::getDevice()
 
 void UsbDeviceController::write(QByteArray data)
 {
-    _currentSerialPort->write(data);
+    if(_currentSerialPort!=nullptr || _currentSerialPort->isOpen())
+    {
+        _currentSerialPort->write(data);
+    }
 }
 
 QByteArray* UsbDeviceController::read(FrameIn *currentFrameIn)

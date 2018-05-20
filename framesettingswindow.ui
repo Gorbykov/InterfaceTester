@@ -7,113 +7,129 @@
     <x>0</x>
     <y>0</y>
     <width>424</width>
-    <height>154</height>
+    <height>199</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <widget class="QWidget" name="formLayoutWidget">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>10</y>
-     <width>401</width>
-     <height>137</height>
-    </rect>
-   </property>
-   <layout class="QFormLayout" name="formLayout">
-    <item row="0" column="0">
-     <widget class="QLabel" name="labelFrameName">
-      <property name="text">
-       <string>Имя кадра:</string>
-      </property>
-      <property name="buddy">
-       <cstring>lineEditFrameName</cstring>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="1">
-     <widget class="QLineEdit" name="lineEditFrameName"/>
-    </item>
-    <item row="1" column="0">
-     <widget class="QLabel" name="labelFileName">
-      <property name="text">
-       <string>Имя файла:</string>
-      </property>
-      <property name="buddy">
-       <cstring>lineEditFileName</cstring>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="1">
-     <widget class="QLineEdit" name="lineEditFileName"/>
-    </item>
-    <item row="2" column="0">
-     <widget class="QLabel" name="labelSize">
-      <property name="text">
-       <string>Размер:</string>
-      </property>
-      <property name="buddy">
-       <cstring>lineEditSize</cstring>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="1">
-     <widget class="QLineEdit" name="lineEditSize"/>
-    </item>
-    <item row="3" column="0">
-     <widget class="QLabel" name="labelDelay">
-      <property name="text">
-       <string>Задержка:</string>
-      </property>
-      <property name="buddy">
-       <cstring>lineEditDelay</cstring>
-      </property>
-     </widget>
-    </item>
-    <item row="3" column="1">
-     <widget class="QLineEdit" name="lineEditDelay"/>
-    </item>
-    <item row="4" column="1">
-     <layout class="QHBoxLayout" name="horizontalLayout_2">
-      <item>
-       <spacer name="horizontalSpacer">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item>
-       <widget class="QPushButton" name="saveButton">
-        <property name="text">
-         <string>Сохранить/Загрузить настройки</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="cancelButton">
-        <property name="text">
-         <string>Отмена</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
-   </layout>
-  </widget>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <widget class="QLabel" name="labelFrameInName">
+     <property name="text">
+      <string>Имя входного кадра</string>
+     </property>
+     <property name="buddy">
+      <cstring>lineEditFrameInName</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QLineEdit" name="lineEditFrameInName"/>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="labelFileInName">
+     <property name="text">
+      <string>Имя  входного файла</string>
+     </property>
+     <property name="buddy">
+      <cstring>lineEditFileInName</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QLineEdit" name="lineEditFileInName"/>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="labelFrameOutName">
+     <property name="text">
+      <string>Имя выходного кадра</string>
+     </property>
+     <property name="buddy">
+      <cstring>lineEditFrameInName</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QLineEdit" name="lineEditFrameOutName"/>
+   </item>
+   <item row="3" column="0">
+    <widget class="QLabel" name="labelFileOutName">
+     <property name="text">
+      <string>Имя выходного файла</string>
+     </property>
+     <property name="buddy">
+      <cstring>lineEditFrameInName</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QLineEdit" name="lineEditFileOutName"/>
+   </item>
+   <item row="4" column="0">
+    <widget class="QLabel" name="labelSize">
+     <property name="text">
+      <string>Размер:</string>
+     </property>
+     <property name="buddy">
+      <cstring>lineEditSize</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1">
+    <widget class="QLineEdit" name="lineEditSize"/>
+   </item>
+   <item row="5" column="0">
+    <widget class="QLabel" name="labelDelay">
+     <property name="text">
+      <string>Задержка:</string>
+     </property>
+     <property name="buddy">
+      <cstring>lineEditDelay</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="1">
+    <widget class="QLineEdit" name="lineEditDelay"/>
+   </item>
+   <item row="6" column="1">
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="saveButton">
+       <property name="text">
+        <string>Сохранить/Загрузить настройки</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="cancelButton">
+       <property name="text">
+        <string>Отмена</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
  </widget>
  <tabstops>
   <tabstop>saveButton</tabstop>
   <tabstop>cancelButton</tabstop>
-  <tabstop>lineEditFrameName</tabstop>
-  <tabstop>lineEditFileName</tabstop>
+  <tabstop>lineEditFrameInName</tabstop>
+  <tabstop>lineEditFileInName</tabstop>
   <tabstop>lineEditSize</tabstop>
   <tabstop>lineEditDelay</tabstop>
  </tabstops>

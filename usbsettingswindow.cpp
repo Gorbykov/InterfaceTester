@@ -9,6 +9,7 @@ UsbSettingsWindow::UsbSettingsWindow(QWidget *parent, UsbDeviceController *usbCo
 {
 
     connect(this, SIGNAL(setUSB(QSerialPort*)),parent,SLOT(setUSB(QSerialPort*)));
+    connect(this, SIGNAL(closeUSB()),parent,SLOT(closeUSB()));
     ui->setupUi(this);
     QComboBox *comboBox = ui->comboBoxDevicecList;
     comboBox->clear();
@@ -26,6 +27,13 @@ void UsbSettingsWindow::on_buttonBox_accepted()
 {
     QSerialPort *newPort = new QSerialPort(ui->comboBoxDevicecList->currentText());
     newPort->setBaudRate(QSerialPort::Baud9600);
+    emit closeUSB();
     emit setUSB(newPort);
-    emit close();
+    //emit close();
+}
+
+void UsbSettingsWindow::on_buttonBox_rejected()
+{
+    emit closeUSB();
+    //emit close();
 }

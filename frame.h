@@ -25,13 +25,14 @@ public:
     QString getFileName();
     bool loadFile(QString fileName);
     bool saveFile(QString fileName);
-	bool saveFile();
+	bool saveFile();    
+    bool isEmpty();
 private:
     QString _fileName;
     QString _frameName;
-	QByteArray _data;
+    QByteArray _data = "";
 	int _size;
-	int _delay;
+    int _delay;
 };
 
 #endif // FRAME_H

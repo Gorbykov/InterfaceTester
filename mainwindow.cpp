@@ -34,6 +34,12 @@ void MainWindow::setFrameOut(Frame *newFrame)
 void::MainWindow::setUSB(QSerialPort *newPort)
 {
     usbDeviceController->setDevice(newPort);
+    usbDeviceController->startSession();
+}
+
+void::MainWindow::closeUSB()
+{
+    usbDeviceController->endSession();
 }
 
 void MainWindow::on_actionSaveAll_triggered()
@@ -98,11 +104,10 @@ void MainWindow::on_actionEhtRSettings_triggered()
 
 void MainWindow::on_actionUSBStart_triggered()
 {
-    if (usbDeviceController->startSession())
+    if(currentFrameOut != NULL)
     {
         usbDeviceController->write(currentFrameOut->getData());
+        //usbDeviceController->read(currentFrameIn);
+        //currentSerialPort->close();
     }
-    //usbDeviceController->read(currentFrameIn);
-    usbDeviceController->endSession();
-    //currentSerialPort->close();
 }

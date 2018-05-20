@@ -32,6 +32,7 @@ public:
 public slots:
     void setFrameOut(Frame *newFrame);
     void setUSB(QSerialPort *newPort);
+    void closeUSB();
     //void refreshIn();
 
 private slots:
