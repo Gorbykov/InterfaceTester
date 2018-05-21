@@ -42,6 +42,9 @@
         <pointsize>12</pointsize>
        </font>
       </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
       <property name="tabStopWidth">
        <number>48</number>
       </property>
@@ -49,11 +52,17 @@
     </item>
     <item>
      <widget class="QTextEdit" name="textEditCompere">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
       <property name="font">
        <font>
         <family>Consolas</family>
         <pointsize>12</pointsize>
        </font>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
       </property>
       <property name="tabStopWidth">
        <number>48</number>

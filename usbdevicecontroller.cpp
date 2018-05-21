@@ -2,10 +2,10 @@
 #include <QMessageBox>
 #include <QtCore>
 
-UsbDeviceController::UsbDeviceController(QTextEdit *textEdit)
+UsbDeviceController::UsbDeviceController()
 {
-    _textEdit = textEdit;
     connect(&_timer, &QTimer::timeout, this, &UsbDeviceController::handleTimeout);
+    connect(this, &UsbDeviceController::refreshFrameIn, parent(), &MainWindow::refreshFrameIn);
     //QObject::connect(this, &UsbDeviceController::refreshFrameIn, )
 }
 
@@ -16,7 +16,7 @@ UsbDeviceController::~UsbDeviceController()
 
 bool UsbDeviceController::startSession()
 {
-    connect(_currentSerialPort, &QSerialPort::readyRead, this, &UsbDeviceController::handleReadyRead);
+
     //connect(_currentSerialPort, &QSerialPort::errorOccurred, this, &UsbDeviceController::handleError);
     if (_currentSerialPort!=nullptr)
     {
@@ -61,26 +61,26 @@ void UsbDeviceController::write(QByteArray data)
     }
 }
 
-QByteArray* UsbDeviceController::read(FrameIn *currentFrameIn)
+void UsbDeviceController::read(FrameIn *currentFrameIn)
 {
     connect(_currentSerialPort, &QSerialPort::readyRead, this, &UsbDeviceController::handleReadyRead);
     _currentFrameIn = currentFrameIn;
     _readData.clear();
     _currentFrameIn->getData().clear();
     _timer.start(TIMEOUT);
-    return nullptr;
 }
 
 void UsbDeviceController::handleReadyRead()
 {
     _readData.append(_currentSerialPort->readAll());
     _currentFrameIn->setData(_readData);
-    _textEdit->setText(_currentFrameIn->getData());
+    emit refreshFrameIn();
     if (!_timer.isActive())
         _timer.start(TIMEOUT);
 }
 
 void UsbDeviceController::handleTimeout()
 {
-    endSession();
+    disconnect(_currentSerialPort, &QSerialPort::readyRead, this, &UsbDeviceController::handleReadyRead);
+    //endSession();
 }

@@ -29,12 +29,13 @@ public:
     FrameIn *currentFrameIn = NULL;
     QString lastViewType = "HEX";
 
+
 public slots:
     void setFrameOut(FrameOut *newFrame);
     void setFrameIn(FrameIn *newFrame);
     void setUSB(QSerialPort *newPort);
     void closeUSB();
-    //void refreshIn();
+    void refreshFrameIn();
 
 private slots:
 

@@ -6,6 +6,7 @@
 #include "frameIn.h"
 #include <QTextEdit>
 
+#include "mainwindow.h"
 
 
 #define TIMEOUT 5000
@@ -16,12 +17,12 @@ class UsbDeviceController: public QObject
 
 public:
 
-    UsbDeviceController(QTextEdit *textEdit);
+    UsbDeviceController();
     ~UsbDeviceController();
     bool startSession();
     void endSession();
     QSerialPort* getDevice();
-    QByteArray* read(FrameIn* currentFrameIn);
+    void read(FrameIn* currentFrameIn);
     void write(QByteArray data);
     void setDevice(QSerialPort* dev);
     QList<QSerialPortInfo> getDeviceList();
@@ -30,7 +31,6 @@ signals:
     void refreshFrameIn();
 
 private:
-    QTextEdit* _textEdit;
     QList<QSerialPortInfo> _deviceList;
     QTimer _timer;
     QSerialPort *_currentSerialPort = NULL;

@@ -92,6 +92,10 @@ void MainWindow::on_actionSaveAll_triggered()
     printToTextEdit(text,ui->textEditOut);
     currentFrameOut->setData(text);
     currentFrameOut->saveFile();
+    text = scanFromTextEdit(ui->textEditIn);
+    printToTextEdit(text,ui->textEditIn);
+    currentFrameIn->setData(text);
+    currentFrameIn->saveFile();
 
 }
 
@@ -100,7 +104,7 @@ void MainWindow::on_actionUsbSettings_triggered()
 {
     if  (usbDeviceController == NULL)
     {
-        usbDeviceController = new UsbDeviceController(this->ui->textEditOut);
+        usbDeviceController = new UsbDeviceController();
     }
     usbSettingsWindow = new UsbSettingsWindow(this, usbDeviceController);
     usbSettingsWindow->setWindowTitle("Настройка USB");
@@ -121,7 +125,7 @@ void MainWindow::on_actionUSBStart_triggered()
     if(currentFrameOut != NULL)
     {
         usbDeviceController->write(currentFrameOut->getData());
-        //usbDeviceController->read(currentFrameIn);
+        usbDeviceController->read(currentFrameIn);
         //currentSerialPort->close();
     }
 }
@@ -136,4 +140,11 @@ void MainWindow::on_actionFrame_triggered()
 void MainWindow::on_charView_currentIndexChanged(const QString &arg1)
 {
     printToTextEdit(scanFromTextEdit(ui->textEditOut),ui->textEditOut);
+    printToTextEdit(scanFromTextEdit(ui->textEditCompere),ui->textEditCompere);
+    printToTextEdit(scanFromTextEdit(ui->textEditIn),ui->textEditIn);
+}
+
+void MainWindow::refreshFrameIn()
+{
+    printToTextEdit(currentFrameIn->getData(),ui->textEditIn);
 }
