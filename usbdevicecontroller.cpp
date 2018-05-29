@@ -2,10 +2,10 @@
 #include <QMessageBox>
 #include <QtCore>
 
-UsbDeviceController::UsbDeviceController()
+UsbDeviceController::UsbDeviceController(QWidget *parent)
 {
+    connect(this, SIGNAL(refreshFrameIn()), parent, SLOT(refreshFrameIn()));
     connect(&_timer, &QTimer::timeout, this, &UsbDeviceController::handleTimeout);
-    connect(this, &UsbDeviceController::refreshFrameIn, parent(), &MainWindow::refreshFrameIn);
     //QObject::connect(this, &UsbDeviceController::refreshFrameIn, )
 }
 
@@ -20,7 +20,7 @@ bool UsbDeviceController::startSession()
     //connect(_currentSerialPort, &QSerialPort::errorOccurred, this, &UsbDeviceController::handleError);
     if (_currentSerialPort!=nullptr)
     {
-        return _currentSerialPort->open(QIODevice::WriteOnly);
+        return _currentSerialPort->open(QIODevice::ReadWrite);
     }
     return false;
 }
@@ -53,20 +53,22 @@ QSerialPort* UsbDeviceController::getDevice()
 }
 
 
-void UsbDeviceController::write(QByteArray data)
+void UsbDeviceController::write(QByteArray *data)
 {
     if(_currentSerialPort!=nullptr || _currentSerialPort->isOpen())
     {
-        _currentSerialPort->write(data);
+        _currentSerialPort->write(*data);
     }
 }
 
 void UsbDeviceController::read(FrameIn *currentFrameIn)
 {
     connect(_currentSerialPort, &QSerialPort::readyRead, this, &UsbDeviceController::handleReadyRead);
+    connect(_currentSerialPort, &QSerialPort::errorOccurred, this, &UsbDeviceController::handleError);
     _currentFrameIn = currentFrameIn;
     _readData.clear();
-    _currentFrameIn->getData().clear();
+    _currentFrameIn->setData(_readData);
+    _timer.setSingleShot(true);
     _timer.start(TIMEOUT);
 }
 
@@ -82,5 +84,15 @@ void UsbDeviceController::handleReadyRead()
 void UsbDeviceController::handleTimeout()
 {
     disconnect(_currentSerialPort, &QSerialPort::readyRead, this, &UsbDeviceController::handleReadyRead);
+    disconnect(_currentSerialPort, &QSerialPort::errorOccurred, this, &UsbDeviceController::handleError);
+
     //endSession();
+}
+
+void UsbDeviceController::handleError(QSerialPort::SerialPortError serialPortError)
+{
+        _readData.append(_currentSerialPort->errorString());
+        _currentFrameIn->setData(_readData);
+        emit refreshFrameIn();
+
 }

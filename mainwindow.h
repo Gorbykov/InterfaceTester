@@ -6,10 +6,12 @@
 
 #include "framesettingswindow.h"
 #include "usbsettingswindow.h"
+#include "ethernetsettingwindow.h"
 
 #include "frameIn.h"
 #include "frameOut.h"
 #include "usbdevicecontroller.h"
+#include "ethernetcontroller.h"
 
 namespace Ui {
 class MainWindow;
@@ -34,6 +36,12 @@ public slots:
     void setFrameOut(FrameOut *newFrame);
     void setFrameIn(FrameIn *newFrame);
     void setUSB(QSerialPort *newPort);
+
+    void setTSocket(QUdpSocket *tSocket);
+    void closeTSocket();
+    void setRSocket(QUdpSocket *rSocket);
+    void closeRSocket();
+
     void closeUSB();
     void refreshFrameIn();
 
@@ -55,12 +63,15 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    FrameSettingsWindow *frameOutSettings = NULL;
-    UsbSettingsWindow *usbSettingsWindow = NULL;
-    UsbDeviceController *usbDeviceController = NULL;
+    FrameSettingsWindow *frameOutSettings = nullptr;
+    UsbSettingsWindow *usbSettingsWindow = nullptr;
+    UsbDeviceController *usbDeviceController = nullptr;
+    EthernetController *ethernetController = nullptr;
+    EthernetSettingWindow *ethernetSettingWindow = nullptr;
 
-    void printToTextEdit(QByteArray text, QTextEdit *textEdit);
-    QByteArray scanFromTextEdit(QTextEdit *textEdit);
+    void printToTextEdit(QByteArray *text, QTextEdit *textEdit);
+    QByteArray* scanFromTextEdit(QTextEdit *textEdit);
+    QByteArray* diff(QByteArray* A, QByteArray* B);
 
 };
 

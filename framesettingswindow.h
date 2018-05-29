@@ -24,6 +24,7 @@ private slots:
 signals:
     void setFrameIn(FrameIn *newFrameIn);
     void setFrameOut(FrameOut *newFrameOut);
+    void refreshFrameIn();
 
 private:
     Ui::FrameSettingsWindow *ui;

@@ -126,12 +126,14 @@
   </layout>
  </widget>
  <tabstops>
-  <tabstop>saveButton</tabstop>
-  <tabstop>cancelButton</tabstop>
   <tabstop>lineEditFrameInName</tabstop>
   <tabstop>lineEditFileInName</tabstop>
+  <tabstop>lineEditFrameOutName</tabstop>
+  <tabstop>lineEditFileOutName</tabstop>
   <tabstop>lineEditSize</tabstop>
   <tabstop>lineEditDelay</tabstop>
+  <tabstop>saveButton</tabstop>
+  <tabstop>cancelButton</tabstop>
  </tabstops>
  <resources/>
  <connections>

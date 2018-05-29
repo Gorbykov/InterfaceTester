@@ -5,10 +5,12 @@
 
 Frame::Frame()
 {
+    _data = new QByteArray("");
 }
 
 Frame::Frame(QString frameName, QString fileName, int size, int delay)
 {
+    Frame();
     this->setFrameName(frameName);    
     this->setFileName(fileName);
     this->setSize(size);
@@ -77,7 +79,7 @@ bool Frame::loadFile(QString fileName)
 	}
 	else
 	{
-        _data = dataFile.readAll();
+        _data = new QByteArray(dataFile.readAll());
 	}
     dataFile.close();
     settingsFile.close();
@@ -94,7 +96,7 @@ bool Frame::saveFile(QString fileName)
 	}
 	else
 	{
-		file.write(_data);
+        file.write(*_data);
 	}
 	file.close();
 	return openStatus;
@@ -107,7 +109,7 @@ bool Frame::saveFile()
 
 void Frame::setData(QByteArray data)
 {
-	_data = data;
+    _data = new QByteArray(data);
 }
 
 void Frame::setFrameName(QString frameName)
@@ -133,7 +135,7 @@ void Frame::setSize(int size)
 
 QByteArray Frame::getData()
 {
-	return _data;
+    return *_data;
 }
 
 QString Frame::getFrameName()
@@ -158,5 +160,5 @@ int Frame::getSize()
 
 bool Frame::isEmpty()
 {
-    return _data.isEmpty();
+    return _data->isEmpty();
 }

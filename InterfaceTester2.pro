@@ -31,7 +31,8 @@ SOURCES += \
     frameIn.cpp \
     usbdevicecontroller.cpp \
     usbsettingswindow.cpp \
-    ethernetsettingwindow.cpp
+    ethernetsettingwindow.cpp \
+    ethernetcontroller.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -41,7 +42,8 @@ HEADERS += \
     framesettingswindow.h \
     usbdevicecontroller.h \
     usbsettingswindow.h \
-    ethernetsettingwindow.h
+    ethernetsettingwindow.h \
+    ethernetcontroller.h
 
 FORMS += \
      mainwindow.ui \

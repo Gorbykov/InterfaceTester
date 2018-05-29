@@ -8,6 +8,7 @@ FrameSettingsWindow::FrameSettingsWindow(QWidget *parent, FrameIn *currentFrameI
     ui->setupUi(this);
     connect(this, SIGNAL(setFrameIn(FrameIn*)),parent,SLOT(setFrameIn(FrameIn*)));
     connect(this, SIGNAL(setFrameOut(FrameOut*)),parent,SLOT(setFrameOut(FrameOut*)));
+    connect(this, SIGNAL(refreshFrameIn()),parent,SLOT(refreshFrameIn()));
     if(currentFrameIn!= nullptr)
     {
         ui->lineEditFileInName->setText(currentFrameIn->getFileName());
@@ -69,5 +70,6 @@ void FrameSettingsWindow::on_saveButton_clicked()
     FrameOut *newFrameOut = new FrameOut(frameOutName,fileOutName,size,delay);
     emit setFrameIn(newFrameIn);
     emit setFrameOut(newFrameOut);
+    emit refreshFrameIn();
     emit close();
 }

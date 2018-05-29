@@ -6,7 +6,7 @@ FrameIn::FrameIn(QString frameName, QString fileName, int size, int delay)
     this->setFileName(fileName);
     this->setSize(size);
     this->setDelay(delay);
-    saveFile(fileName);
+    loadFile(fileName);
 }
 
 FrameIn::~FrameIn()

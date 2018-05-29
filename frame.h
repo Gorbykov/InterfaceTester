@@ -18,7 +18,7 @@ public:
     void setFileName(QString fileName);
 	void setSize(int size);
 	void setDelay(int delay);
-	QByteArray getData();
+    QByteArray getData();
 	int getSize();
 	int getDelay();
     QString getFrameName();
@@ -30,7 +30,7 @@ public:
 private:
     QString _fileName;
     QString _frameName;
-    QByteArray _data = "";
+    QByteArray* _data = NULL;
 	int _size;
     int _delay;
 };
