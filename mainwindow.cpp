@@ -98,7 +98,7 @@ void MainWindow::on_actionSaveAll_triggered()
     printToTextEdit(text,ui->textEditIn);
     currentFrameIn->setData(*text);
     currentFrameIn->saveFile();
-
+    refreshFrameIn();
 }
 
 
@@ -155,8 +155,9 @@ void MainWindow::on_actionFrame_triggered()
 void MainWindow::on_charView_currentIndexChanged(const QString &arg1)
 {
     printToTextEdit(scanFromTextEdit(ui->textEditOut),ui->textEditOut);
-    printToTextEdit(scanFromTextEdit(ui->textEditCompere),ui->textEditCompere);
+    //printToTextEdit(scanFromTextEdit(ui->textEditCompere),ui->textEditCompere);
     printToTextEdit(scanFromTextEdit(ui->textEditIn),ui->textEditIn);
+    refreshFrameIn();
     lastViewType = arg1;
 }
 
@@ -188,14 +189,9 @@ QByteArray *MainWindow::diff(QByteArray *A, QByteArray *B)
     return C;
 }
 
-void MainWindow::closeRSocket()
+void MainWindow::closeSocket()
 {
-
-}
-
-void MainWindow::closeTSocket()
-{
-
+    ethernetController->endSession();
 }
 
 void MainWindow::setTSocket(QUdpSocket *tSocket)
@@ -206,4 +202,19 @@ void MainWindow::setTSocket(QUdpSocket *tSocket)
 void MainWindow::setRSocket(QUdpSocket *rSocket)
 {
     ethernetController->setRSocket(rSocket);
+}
+
+void MainWindow::on_actionEthStart_triggered()
+{
+
+    if (ethernetController->isValid())
+    {
+        ethernetController->startSession();
+    }
+    if(currentFrameOut != NULL)
+    {
+        ethernetController->read(currentFrameIn);
+        ethernetController->write(new QByteArray(currentFrameOut->getData()));
+        //currentSerialPort->close();
+    }
 }

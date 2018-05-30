@@ -38,9 +38,8 @@ public slots:
     void setUSB(QSerialPort *newPort);
 
     void setTSocket(QUdpSocket *tSocket);
-    void closeTSocket();
     void setRSocket(QUdpSocket *rSocket);
-    void closeRSocket();
+    void closeSocket();
 
     void closeUSB();
     void refreshFrameIn();
@@ -60,6 +59,8 @@ private slots:
     void on_actionFrame_triggered();
 
     void on_charView_currentIndexChanged(const QString &arg1);
+
+    void on_actionEthStart_triggered();
 
 private:
     Ui::MainWindow *ui;
