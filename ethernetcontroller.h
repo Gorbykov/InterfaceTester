@@ -40,15 +40,15 @@ public:
     QUdpSocket* getRSocket();
     FullAddress* getTAddress();
     FullAddress* getRAddress();
-    void setTSocket(QUdpSocket* tSocket, FullAddress *tAddress);
-    void setRSocket(QUdpSocket* rSocket, FullAddress *rAddress);
+    void setTSocket( FullAddress *tAddress);
+    void setRSocket( FullAddress *rAddress);
 signals:
     void refreshFrameIn();
 
 private:
     QUdpSocket *_tSocket = nullptr;
-    FullAddress *_tAddress;
-    FullAddress *_rAddress;
+    FullAddress *_tAddress = nullptr;
+    FullAddress *_rAddress = nullptr;
     QUdpSocket *_rSocket = nullptr;
     QByteArray _readData;
     QTimer _timer;

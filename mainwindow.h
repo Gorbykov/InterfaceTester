@@ -37,8 +37,8 @@ public slots:
     void setFrameIn(FrameIn *newFrame);
     void setUSB(QSerialPort *newPort);
 
-    void setTSocket(QUdpSocket *tSocket,FullAddress *tAddress);
-    void setRSocket(QUdpSocket *rSocket, FullAddress *rAddress);
+    void setTSocket(FullAddress *tAddress);
+    void setRSocket( FullAddress *rAddress);
     void closeSocket();
 
     void closeUSB();

@@ -5,12 +5,12 @@ EthernetSettingWindow::EthernetSettingWindow(QWidget *parent, EthernetController
     QDialog(parent),
     ui(new Ui::EthernetSettingWindow)
 {
-    connect(this, SIGNAL(setTSocket(QUdpSocket*,FullAddress*)),parent,SLOT(setTSocket(QUdpSocket*,FullAddress*)));
-    connect(this, SIGNAL(setRSocket(QUdpSocket*,FullAddress*)),parent,SLOT(setRSocket(QUdpSocket*,FullAddress*)));
+    connect(this, SIGNAL(setTSocket(FullAddress*)),parent,SLOT(setTSocket(FullAddress*)));
+    connect(this, SIGNAL(setRSocket(FullAddress*)),parent,SLOT(setRSocket(FullAddress*)));
     connect(this, SIGNAL(closeSocket()),parent,SLOT(closeRSocket()));
     ui->setupUi(this);
-    QUdpSocket* tSocket = ethernetController->getTSocket();
-    QUdpSocket* rSocket = ethernetController->getRSocket();
+    //QUdpSocket* tSocket = ethernetController->getTSocket();
+    //QUdpSocket* rSocket = ethernetController->getRSocket();
     FullAddress* tAddress = ethernetController->getTAddress();
     FullAddress* rAddress = ethernetController->getRAddress();
 
@@ -21,25 +21,25 @@ EthernetSettingWindow::EthernetSettingWindow(QWidget *parent, EthernetController
                       + "\\." + oIpRange
                       + "\\." + oIpRange + "$");
     ui->lineEditIp->setValidator(new QRegExpValidator(oIpRegex));
-    QUdpSocket *socket = nullptr;
+    //QUdpSocket *socket = nullptr;
     FullAddress *address = nullptr;
     _type = type;
     if (_type == 'r')
     {
-        socket = rSocket;
+        //socket = rSocket;
         address = rAddress;
     }
     if (_type == 't')
     {
-        socket = tSocket;        
+        //socket = tSocket;
         address = tAddress;
     }
 
-    if (socket!=nullptr)
+    if (address!=nullptr)
     {
         ui->lineEditIp->setText(address->ip.toString());
         ui->lineEditPort->setText(QString::number(address->port));
-        _currentSocket = socket;
+       // _currentSocket = socket;
     }
 }
 
@@ -59,18 +59,18 @@ void EthernetSettingWindow::on_pushButtonOK_clicked()
 
     QHostAddress ip = QHostAddress(ui->lineEditIp->text());
     int port = ui->lineEditPort->text().toInt();
-    QUdpSocket *socket = new QUdpSocket(parent());
+    //QUdpSocket *socket = new QUdpSocket(parent());
     //if (socket ->bind(ip,port))
     FullAddress *address = new FullAddress(ip,port);
     {
         if (_type == 'r')
         {
-            emit setRSocket(socket,address);
+            emit setRSocket(address);
             emit close();
         }
         if (_type == 't')
         {
-            emit setTSocket(socket,address);
+            emit setTSocket(address);
             emit close();
         }
     }

@@ -47,9 +47,9 @@ QList<QSerialPortInfo> UsbDeviceController::getDeviceList()
 
 void UsbDeviceController::endSession()
 {
-    disconnect(_currentSerialPort, &QSerialPort::readyRead, this, &UsbDeviceController::handleReadyRead);
     if(_currentSerialPort!=nullptr )
     {
+        disconnect(_currentSerialPort, &QSerialPort::readyRead, this, &UsbDeviceController::handleReadyRead);
         _currentSerialPort->close();
     }
 }

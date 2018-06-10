@@ -10,7 +10,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
+    usbDeviceController = new UsbDeviceController(this);
+    ethernetController = new EthernetController(this);
 }
 
 MainWindow::~MainWindow()
@@ -103,10 +104,6 @@ void MainWindow::on_actionSaveAll_triggered()
 
 void MainWindow::on_actionUsbSettings_triggered()
 {
-    if  (usbDeviceController == nullptr)
-    {
-        usbDeviceController = new UsbDeviceController(this);
-    }
     usbSettingsWindow = new UsbSettingsWindow(this, usbDeviceController);
     usbSettingsWindow->setWindowTitle("Настройка USB");
     usbSettingsWindow->show();
@@ -114,10 +111,6 @@ void MainWindow::on_actionUsbSettings_triggered()
 
 void MainWindow::on_actionEhtTSettings_triggered()
 {
-    if (ethernetController == nullptr)
-    {
-        ethernetController = new EthernetController(this);
-    }
     ethernetSettingWindow = new EthernetSettingWindow(this,ethernetController, 't');
     ethernetSettingWindow->setWindowTitle("Настройка Ethernet передатчика");
     ethernetSettingWindow->show();
@@ -193,14 +186,14 @@ void MainWindow::closeSocket()
     ethernetController->endSession();
 }
 
-void MainWindow::setTSocket(QUdpSocket *tSocket, FullAddress *tAddress)
+void MainWindow::setTSocket(FullAddress *tAddress)
 {
-    ethernetController->setTSocket(tSocket,tAddress);
+    ethernetController->setTSocket(tAddress);
 }
 
-void MainWindow::setRSocket(QUdpSocket *rSocket,FullAddress *rAddress)
+void MainWindow::setRSocket(FullAddress *rAddress)
 {
-    ethernetController->setRSocket(rSocket,rAddress);
+    ethernetController->setRSocket(rAddress);
 }
 
 void MainWindow::on_actionEthStart_triggered()

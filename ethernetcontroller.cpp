@@ -12,17 +12,17 @@ EthernetController::~EthernetController()
     endSession();
 }
 
-void EthernetController::setTSocket(QUdpSocket *tSocket, FullAddress *tAddress)
+void EthernetController::setTSocket( FullAddress *tAddress)
 {
-    _tSocket = tSocket;
+    //_tSocket = tSocket;
     _tAddress = tAddress;
 }
 
-void EthernetController::setRSocket(QUdpSocket *rSocket, FullAddress *rAddress)
+void EthernetController::setRSocket(FullAddress *rAddress)
 {
-    _rSocket = rSocket;
+    //_rSocket = rSocket;
     _rAddress = rAddress;
-    connect(_rSocket, &QUdpSocket::readyRead, this, &EthernetController::handleReadyRead);
+    //connect(_rSocket, &QUdpSocket::readyRead, this, &EthernetController::handleReadyRead);
 }
 
 FullAddress* EthernetController::getTAddress()
@@ -62,6 +62,7 @@ bool EthernetController::startOutSession()
 {
     this->endSession();
     _rSocket =  new QUdpSocket(parent());
+    connect(_rSocket, &QUdpSocket::readyRead, this, &EthernetController::handleReadyRead);
     _rSocket->bind(_rAddress->ip,_rAddress->port);
     if (_rSocket->isValid())
     {
@@ -96,11 +97,19 @@ bool EthernetController::isValid()
 
 void EthernetController::endSession()
 {
-    disconnect(_rSocket, &QUdpSocket::readyRead, this, &EthernetController::handleReadyRead);
-    _tSocket->disconnectFromHost();
-    _tSocket->abort();
-    _rSocket->disconnectFromHost();
-    _rSocket->abort();
+    if(_rSocket != nullptr)
+    {
+        disconnect(_rSocket, &QUdpSocket::readyRead, this, &EthernetController::handleReadyRead);
+
+       _rSocket->close();
+        delete _rSocket;
+       _rSocket = nullptr;
+    }
+    if (_tSocket != nullptr)
+    {
+        _tSocket->close();
+        delete _tSocket;
+    }
 }
 
 void EthernetController::read(FrameIn* currentFrameIn)
