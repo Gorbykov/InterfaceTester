@@ -38,7 +38,6 @@ void MainWindow::setFrameIn(FrameIn *newFrame)
 void::MainWindow::setUSB(QSerialPort *newPort)
 {
     usbDeviceController->setDevice(newPort);
-    usbDeviceController->startSession();
 }
 
 void::MainWindow::closeUSB()
@@ -194,27 +193,136 @@ void MainWindow::closeSocket()
     ethernetController->endSession();
 }
 
-void MainWindow::setTSocket(QUdpSocket *tSocket)
+void MainWindow::setTSocket(QUdpSocket *tSocket, FullAddress *tAddress)
 {
-    ethernetController->setTSocket(tSocket);
+    ethernetController->setTSocket(tSocket,tAddress);
 }
 
-void MainWindow::setRSocket(QUdpSocket *rSocket)
+void MainWindow::setRSocket(QUdpSocket *rSocket,FullAddress *rAddress)
 {
-    ethernetController->setRSocket(rSocket);
+    ethernetController->setRSocket(rSocket,rAddress);
 }
 
 void MainWindow::on_actionEthStart_triggered()
 {
-
-    if (ethernetController->isValid())
-    {
-        ethernetController->startSession();
-    }
     if(currentFrameOut != NULL)
     {
         ethernetController->read(currentFrameIn);
         ethernetController->write(new QByteArray(currentFrameOut->getData()));
         //currentSerialPort->close();
     }
+}
+
+void MainWindow::on_actionStart_triggered()
+{
+    int inSelect=-1;
+    int outSelect=-1;
+
+    if(ui->radioButtonUsbIn->isChecked())
+    {
+        inSelect = 0;
+    }
+    if(ui->radioButtonEthIn->isChecked())
+    {
+        inSelect = 1;
+    }
+    if(ui->radioButtonUsbOut->isChecked())
+    {
+        outSelect = 0;
+    }
+    if(ui->radioButtonEthOut->isChecked())
+    {
+        outSelect = 1;
+    }
+
+    if(currentFrameOut == NULL)
+    {
+        return;
+    }
+    if(inSelect+outSelect != -2)
+    {
+        switch (outSelect) {
+        case 0:
+            usbDeviceController->read(currentFrameIn);
+            break;
+        case 1:
+            ethernetController->read(currentFrameIn);
+            break;
+        }
+        switch (inSelect) {
+        case 0:
+            usbDeviceController->write(new QByteArray(currentFrameOut->getData()));
+            break;
+        case 1:
+            ethernetController->write(new QByteArray(currentFrameOut->getData()));
+        }
+    }
+
+}
+
+void MainWindow::on_pushButtonIn_clicked()
+{
+    int inSelect=-1;
+    if(ui->radioButtonUsbIn->isChecked())
+    {
+        inSelect = 0;
+    }
+    if(ui->radioButtonEthIn->isChecked())
+    {
+        inSelect = 1;
+    }
+
+    switch (inSelect) {
+    case 0:
+        if(currentFrameOut != NULL)
+        {
+            usbDeviceController->startInSession();
+        }
+        break;
+    case 1:
+        if(currentFrameOut != NULL)
+        {
+            ethernetController->startInSession();
+        }
+        break;
+    }
+}
+
+void MainWindow::on_pushButtonOut_clicked()
+{
+    int outSelect=-1;
+    if(ui->radioButtonUsbOut->isChecked())
+    {
+        outSelect = 0;
+    }
+    if(ui->radioButtonEthOut->isChecked())
+    {
+        outSelect = 1;
+    }
+
+    switch (outSelect) {
+    case 0:
+        if(currentFrameOut != NULL)
+        {
+            usbDeviceController->startOutSession();
+        }
+        break;
+    case 1:
+        if(currentFrameOut != NULL)
+        {
+            ethernetController->startOutSession();
+        }
+        break;
+    }
+}
+
+void MainWindow::on_pushButtonStart_clicked()
+{
+    on_actionStart_triggered();
+}
+
+void MainWindow::on_pushButtonEnd_clicked()
+{
+    usbDeviceController->endSession();
+    ethernetController->endSession();
 }

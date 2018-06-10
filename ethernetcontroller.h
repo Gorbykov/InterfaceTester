@@ -8,6 +8,18 @@
 
 #define TIMEOUT 10000
 
+
+struct FullAddress
+{
+  QHostAddress ip;
+  quint16 port;
+  FullAddress(QHostAddress ip, quint16 port)
+  {
+      this->ip = ip;
+      this->port = port;
+  }
+};
+
 class EthernetController : public QObject
 {
     Q_OBJECT
@@ -18,19 +30,25 @@ public:
     void write(QByteArray* data);
 
     bool startSession();
+    bool startInSession();
+    bool startOutSession();
     void endSession();
 
     bool isValid();
 
     QUdpSocket* getTSocket();
     QUdpSocket* getRSocket();
-    void setTSocket(QUdpSocket* tSocket);
-    void setRSocket(QUdpSocket* rSocket);
+    FullAddress* getTAddress();
+    FullAddress* getRAddress();
+    void setTSocket(QUdpSocket* tSocket, FullAddress *tAddress);
+    void setRSocket(QUdpSocket* rSocket, FullAddress *rAddress);
 signals:
     void refreshFrameIn();
 
 private:
     QUdpSocket *_tSocket = nullptr;
+    FullAddress *_tAddress;
+    FullAddress *_rAddress;
     QUdpSocket *_rSocket = nullptr;
     QByteArray _readData;
     QTimer _timer;
@@ -41,5 +59,6 @@ private slots:
     void handleTimeout();
 
 };
+
 
 #endif // ETHERNETCONTROLLER_H

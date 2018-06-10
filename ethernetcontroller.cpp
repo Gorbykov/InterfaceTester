@@ -12,15 +12,27 @@ EthernetController::~EthernetController()
     endSession();
 }
 
-void EthernetController::setTSocket(QUdpSocket *tSocket)
+void EthernetController::setTSocket(QUdpSocket *tSocket, FullAddress *tAddress)
 {
     _tSocket = tSocket;
+    _tAddress = tAddress;
 }
 
-void EthernetController::setRSocket(QUdpSocket *rSocket)
+void EthernetController::setRSocket(QUdpSocket *rSocket, FullAddress *rAddress)
 {
     _rSocket = rSocket;
+    _rAddress = rAddress;
     connect(_rSocket, &QUdpSocket::readyRead, this, &EthernetController::handleReadyRead);
+}
+
+FullAddress* EthernetController::getTAddress()
+{
+    return _tAddress;
+}
+
+FullAddress* EthernetController::getRAddress()
+{
+    return _rAddress;
 }
 
 QUdpSocket* EthernetController::getTSocket()
@@ -33,28 +45,37 @@ QUdpSocket* EthernetController::getRSocket()
     return _rSocket;
 }
 
-bool EthernetController::startSession()
+bool EthernetController::startInSession()
 {
-    if (_tSocket->isValid() && _rSocket->isValid())
+    this->endSession();
+    _tSocket =  new QUdpSocket(parent());
+    _tSocket->bind(_tAddress->ip,_tAddress->port);
+    if (_tSocket->isValid())
     {
-        //_tSocket->disconnectFromHost();
-        _tSocket->connectToHost(_rSocket->localAddress(),_rSocket->localPort(),QIODevice::WriteOnly);
-        _tSocket->waitForConnected();
-        qDebug() << (_tSocket->localAddress().toString())<<" to "<<(_tSocket->peerAddress().toString())<<"/n";
-
-
-        //_tSocket->disconnectFromHost();
-        //_rSocket->connectToHost(_tSocket->localAddress(),_tSocket->localPort(),QIODevice::ReadWrite);
-        //_rSocket->waitForConnected();
-        //qDebug() << (_rSocket->localAddress().toString())<<" to "<<(_rSocket->peerAddress().toString())<<"/n";
-
+        _tAddress->port = _tSocket->localPort();
         return true;
     }
-    else
-    {
-        return false;
-    }
+    return false;
 }
+
+bool EthernetController::startOutSession()
+{
+    this->endSession();
+    _rSocket =  new QUdpSocket(parent());
+    _rSocket->bind(_rAddress->ip,_rAddress->port);
+    if (_rSocket->isValid())
+    {
+        _rAddress->port = _rSocket->localPort();
+        return true;
+    }
+    return false;
+}
+
+bool EthernetController::startSession()
+{
+    return startInSession() && startOutSession();
+}
+
 
 bool EthernetController::isValid()
 {
@@ -75,17 +96,15 @@ bool EthernetController::isValid()
 
 void EthernetController::endSession()
 {
+    disconnect(_rSocket, &QUdpSocket::readyRead, this, &EthernetController::handleReadyRead);
     _tSocket->disconnectFromHost();
+    _tSocket->abort();
     _rSocket->disconnectFromHost();
+    _rSocket->abort();
 }
 
 void EthernetController::read(FrameIn* currentFrameIn)
 {
-    qDebug("read");
-    qDebug()<<(_rSocket->localAddress().toString())
-           <<" to "
-           <<(_rSocket->peerAddress().toString())
-           <<"/n";
     _currentFrameIn = currentFrameIn;
     _readData.clear();
     _currentFrameIn->setData(_readData);
@@ -95,9 +114,7 @@ void EthernetController::read(FrameIn* currentFrameIn)
 
 void EthernetController::write(QByteArray* data)
 {
-    _tSocket->write(*data);
-    _tSocket->waitForBytesWritten();
-    qDebug() << (_tSocket->localAddress().toString())<<" to "<<(_tSocket->peerAddress().toString())<<"/n";
+    _tSocket->writeDatagram(*data,_rAddress->ip,_rAddress->port);
 }
 
 

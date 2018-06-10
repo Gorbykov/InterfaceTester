@@ -101,11 +101,25 @@
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="pushButtonStart">
+        <property name="text">
+         <string>Отправить по...</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QGroupBox" name="groupIn">
         <property name="title">
          <string>Вход</string>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_3">
+         <item>
+          <widget class="QPushButton" name="pushButtonIn">
+           <property name="text">
+            <string>Открыть вход</string>
+           </property>
+          </widget>
+         </item>
          <item>
           <widget class="QRadioButton" name="radioButtonUsbIn">
            <property name="text">
@@ -117,6 +131,9 @@
           <widget class="QRadioButton" name="radioButtonEthIn">
            <property name="text">
             <string>Ethernet</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
@@ -130,6 +147,13 @@
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_4">
          <item>
+          <widget class="QPushButton" name="pushButtonOut">
+           <property name="text">
+            <string>Слушать выход</string>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QRadioButton" name="radioButtonUsbOut">
            <property name="text">
             <string>USB</string>
@@ -137,13 +161,23 @@
           </widget>
          </item>
          <item>
-          <widget class="QRadioButton" name="radioEthOut">
+          <widget class="QRadioButton" name="radioButtonEthOut">
            <property name="text">
             <string>Ethernet</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
         </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButtonEnd">
+        <property name="text">
+         <string>Завершить все сеансы</string>
+        </property>
        </widget>
       </item>
       <item>
@@ -191,8 +225,6 @@
    </attribute>
    <addaction name="actionFrame"/>
    <addaction name="actionSaveAll"/>
-   <addaction name="actionEthStart"/>
-   <addaction name="actionUSBStart"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionFrame">
@@ -257,6 +289,14 @@
    </property>
    <property name="toolTip">
     <string>Настройка кадра получаемого с устройства</string>
+   </property>
+  </action>
+  <action name="actionStart">
+   <property name="text">
+    <string>Передача по...</string>
+   </property>
+   <property name="toolTip">
+    <string>Начать передачу по настраевыемым интерфейсам</string>
    </property>
   </action>
  </widget>

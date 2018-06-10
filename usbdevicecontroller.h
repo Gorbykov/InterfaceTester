@@ -19,8 +19,12 @@ public:
 
     UsbDeviceController(QWidget *parent);
     ~UsbDeviceController();
+
     bool startSession();
+    bool startInSession();
+    bool startOutSession();
     void endSession();
+
     QSerialPort* getDevice();
     void read(FrameIn* currentFrameIn);
     void write(QByteArray* data);

@@ -14,9 +14,21 @@ UsbDeviceController::~UsbDeviceController()
     endSession();
 }
 
-bool UsbDeviceController::startSession()
-{
 
+bool UsbDeviceController::startInSession()
+{
+    return startSession();
+}
+
+
+bool UsbDeviceController::startOutSession()
+{
+    return startSession();
+}
+bool
+UsbDeviceController::startSession()
+{
+    this->endSession();
     //connect(_currentSerialPort, &QSerialPort::errorOccurred, this, &UsbDeviceController::handleError);
     if (_currentSerialPort!=nullptr)
     {

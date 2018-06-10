@@ -37,8 +37,8 @@ public slots:
     void setFrameIn(FrameIn *newFrame);
     void setUSB(QSerialPort *newPort);
 
-    void setTSocket(QUdpSocket *tSocket);
-    void setRSocket(QUdpSocket *rSocket);
+    void setTSocket(QUdpSocket *tSocket,FullAddress *tAddress);
+    void setRSocket(QUdpSocket *rSocket, FullAddress *rAddress);
     void closeSocket();
 
     void closeUSB();
@@ -61,6 +61,16 @@ private slots:
     void on_charView_currentIndexChanged(const QString &arg1);
 
     void on_actionEthStart_triggered();
+
+    void on_actionStart_triggered();
+
+    void on_pushButtonIn_clicked();
+
+    void on_pushButtonStart_clicked();
+
+    void on_pushButtonEnd_clicked();
+
+    void on_pushButtonOut_clicked();
 
 private:
     Ui::MainWindow *ui;
