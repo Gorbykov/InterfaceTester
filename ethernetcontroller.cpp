@@ -109,6 +109,7 @@ void EthernetController::endSession()
     {
         _tSocket->close();
         delete _tSocket;
+        _tSocket = nullptr;
     }
 }
 
