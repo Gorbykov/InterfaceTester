@@ -33,8 +33,11 @@ public:
     bool startInSession();
     bool startOutSession();
     void endSession();
+    void endInSession();
+    void endOutSession();
 
-    bool isValid();
+    bool isInReady();
+    bool isOutReady();
 
     QUdpSocket* getTSocket();
     QUdpSocket* getRSocket();
@@ -53,6 +56,8 @@ private:
     QByteArray _readData;
     QTimer _timer;
     FrameIn* _currentFrameIn;
+    bool _inReady = false;
+    bool _outReady = false;
 
 private slots:
     void handleReadyRead();
