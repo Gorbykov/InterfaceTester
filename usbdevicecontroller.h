@@ -24,6 +24,7 @@ public:
     bool startInSession();
     bool startOutSession();
     void endSession();
+    bool isReady();
 
     QSerialPort* getDevice();
     void read(FrameIn* currentFrameIn);
@@ -40,6 +41,7 @@ private:
     QSerialPort *_currentSerialPort = NULL;
     QByteArray _readData;
     FrameIn* _currentFrameIn;
+    bool _ready = false;
 
 private slots:
     void handleReadyRead();
