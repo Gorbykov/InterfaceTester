@@ -8,8 +8,7 @@
 #include "usbsettingswindow.h"
 #include "ethernetsettingwindow.h"
 
-#include "frameIn.h"
-#include "frameOut.h"
+#include "frame.h"
 #include "usbdevicecontroller.h"
 #include "ethernetcontroller.h"
 
@@ -25,16 +24,9 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-    QMap<QString, FrameOut*> framesOut;
-    QMap<QString, FrameIn*> framesIn;
-    FrameOut *currentFrameOut = NULL;
-    FrameIn *currentFrameIn = NULL;
-    QString lastViewType = "HEX";
-
 
 public slots:
-    void setFrameOut(FrameOut *newFrame);
-    void setFrameIn(FrameIn *newFrame);
+    void setFrame(Frame *newFrame);
     void setUSB(QSerialPort *newPort);
 
     void setTSocket(FullAddress *tAddress);
@@ -42,7 +34,7 @@ public slots:
     void closeSocket();
 
     void closeUSB();
-    void refreshFrameIn();
+    void refreshFrameOut();
 
 private slots:
 
@@ -73,16 +65,20 @@ private slots:
     void on_pushButtonOut_clicked();
 
 private:
+    Frame *_frame = nullptr;
+    QString _lastViewType = "HEX";
     Ui::MainWindow *ui;
-    FrameSettingsWindow *frameOutSettings = nullptr;
+    FrameSettingsWindow *frameSettings = nullptr;
     UsbSettingsWindow *usbSettingsWindow = nullptr;
     UsbDeviceController *usbDeviceController = nullptr;
     EthernetController *ethernetController = nullptr;
     EthernetSettingWindow *ethernetSettingWindow = nullptr;
 
+    void printToTextEdit(QVector<QByteArray*> *data, QTextEdit *textEdit);
     void printToTextEdit(QByteArray *text, QTextEdit *textEdit);
     QByteArray* scanFromTextEdit(QTextEdit *textEdit);
     QByteArray* diff(QByteArray* A, QByteArray* B);
+    QVector<QByteArray*>* diff(QVector<QByteArray *> *A, QVector<QByteArray *> *B);
 
 };
 

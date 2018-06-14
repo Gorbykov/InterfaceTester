@@ -3,6 +3,7 @@
 #include "framesettingswindow.h"
 #include "usbsettingswindow.h"
 
+#include <QMessageBox>
 #include <QtGlobal>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -20,22 +21,19 @@ MainWindow::~MainWindow()
 }
 
 
-void MainWindow::setFrameOut(FrameOut *newFrame)
+void MainWindow::setFrame(Frame *newFrame)
 {
-    FrameOut *currFrame = newFrame;
-    framesOut.value(newFrame->getFrameName(),currFrame);
-    currentFrameOut = currFrame;
-    printToTextEdit(new QByteArray(currFrame->getData()),ui->textEditOut);
+    Frame *currFrame = newFrame;
+    _frame = currFrame;
+    if(!_frame->openAll())
+    {
+        QMessageBox::warning(0,"Ошибка открытия файлов","Невозможно открыть файлы");
+    }
+    printToTextEdit(_frame->getDataIn(),ui->textEditIn);
+    //printToTextEdit(_frame->getDataOut(),ui->textEditOut);
+    refreshFrameOut();
 }
 
-void MainWindow::setFrameIn(FrameIn *newFrame)
-{
-    FrameIn *currFrame = newFrame;
-    framesIn.value(newFrame->getFrameName(),currFrame);
-    currentFrameIn = currFrame;
-    printToTextEdit(new QByteArray(currFrame->getData()),ui->textEditIn);
-
-}
 void::MainWindow::setUSB(QSerialPort *newPort)
 {
     usbDeviceController->setDevice(newPort);
@@ -47,11 +45,20 @@ void::MainWindow::closeUSB()
 }
 
 
-void MainWindow::printToTextEdit(QByteArray* text, QTextEdit *textEdit)
+void MainWindow::printToTextEdit(QVector<QByteArray*> *data, QTextEdit *textEdit)
+{
+    QByteArray *text = new QByteArray();
+    foreach (auto s, *data) {
+        text->append(*s);
+    }
+    printToTextEdit(text,textEdit);
+}
+
+void MainWindow::printToTextEdit(QByteArray *text, QTextEdit *textEdit)
 {
     QString viewType = ui->charView->currentText();
 
-    if (currentFrameOut == NULL)
+    if (_frame == nullptr)
     {
         return;
     }
@@ -70,7 +77,7 @@ QByteArray* MainWindow::scanFromTextEdit(QTextEdit *textEdit)
 {
     QByteArray* text;
     QString inStr = textEdit->toPlainText();
-    if (lastViewType == "HEX")
+    if (_lastViewType == "HEX")
     {
         inStr.remove(QRegExp("[^{0-9a-fA-F}]*"));
         if (inStr.length()%2 == 1)
@@ -81,7 +88,7 @@ QByteArray* MainWindow::scanFromTextEdit(QTextEdit *textEdit)
         }
         text = new QByteArray( QByteArray::fromHex(inStr.toUtf8()));
     }
-    else if(lastViewType == "ASCII")
+    else if(_lastViewType == "ASCII")
     {
         text = new QByteArray(inStr.toUtf8());
     }
@@ -90,15 +97,15 @@ QByteArray* MainWindow::scanFromTextEdit(QTextEdit *textEdit)
 
 void MainWindow::on_actionSaveAll_triggered()
 {
-    QByteArray *text = scanFromTextEdit(ui->textEditOut);
-    printToTextEdit(text,ui->textEditOut);
-    currentFrameOut->setData(*text);
-    currentFrameOut->saveFile();
-    text = scanFromTextEdit(ui->textEditIn);
-    printToTextEdit(text,ui->textEditIn);
-    currentFrameIn->setData(*text);
-    currentFrameIn->saveFile();
-    refreshFrameIn();
+//    QByteArray *text = scanFromTextEdit(ui->textEditOut);
+//    printToTextEdit(text,ui->textEditOut);
+//    //currentFrameOut->setData(*text);
+//    //currentFrameOut->saveFile();
+//    text = scanFromTextEdit(ui->textEditIn);
+//    printToTextEdit(text,ui->textEditIn);
+//    //currentFrameIn->setData(*text);
+//    //currentFrameIn->saveFile();
+//    refreshFrameOut();
 }
 
 
@@ -129,34 +136,34 @@ void MainWindow::on_actionEhtRSettings_triggered()
 
 void MainWindow::on_actionUSBStart_triggered()
 {
-    if(currentFrameOut != NULL)
+    if(_frame != nullptr)
     {
-        usbDeviceController->write(new QByteArray(currentFrameOut->getData()));
-        usbDeviceController->read(currentFrameIn);
+        usbDeviceController->write(_frame);
+        usbDeviceController->read(_frame);
         //currentSerialPort->close();
     }
 }
 
 void MainWindow::on_actionFrame_triggered()
 {
-    frameOutSettings = new FrameSettingsWindow(this,currentFrameIn,currentFrameOut);
-    frameOutSettings->setWindowTitle("Настройка кадров");
-    frameOutSettings->show();
+    frameSettings = new FrameSettingsWindow(this,_frame);
+    frameSettings->setWindowTitle("Настройка кадров");
+    frameSettings->show();
 }
 
 void MainWindow::on_charView_currentIndexChanged(const QString &arg1)
 {
-    printToTextEdit(scanFromTextEdit(ui->textEditOut),ui->textEditOut);
+    //printToTextEdit(scanFromTextEdit(ui->textEditOut),ui->textEditOut);
     //printToTextEdit(scanFromTextEdit(ui->textEditCompere),ui->textEditCompere);
     printToTextEdit(scanFromTextEdit(ui->textEditIn),ui->textEditIn);
-    refreshFrameIn();
-    lastViewType = arg1;
+    refreshFrameOut();
+    _lastViewType = arg1;
 }
 
-void MainWindow::refreshFrameIn()
+void MainWindow::refreshFrameOut()
 {
-    printToTextEdit(new QByteArray(currentFrameIn->getData()),ui->textEditIn);
-    printToTextEdit(diff(new QByteArray(currentFrameOut->getData()),new QByteArray(currentFrameIn->getData())),ui->textEditCompere);
+    printToTextEdit(_frame->getDataOut(),ui->textEditOut);
+    printToTextEdit(diff(_frame->getDataOut(),_frame->getDataIn()),ui->textEditCompere);
 }
 
 
@@ -181,6 +188,27 @@ QByteArray *MainWindow::diff(QByteArray *A, QByteArray *B)
     return C;
 }
 
+QVector<QByteArray*>* MainWindow::diff(QVector<QByteArray *> *A, QVector<QByteArray *> *B)
+{
+    int max = qMax(A->size(),B->size());
+    int min = qMin(A->size(),B->size());
+    QVector<QByteArray *>  *M = A->size()==max?A:B;
+    QVector<QByteArray *>  *C = new QVector<QByteArray *>(max,nullptr);
+    for (int i = 0 ; i< max ; i++)
+    {
+        if(i<min)
+        {
+            (*C)[i] =diff(A->at(i),B->at(i));
+        }
+        else
+        {
+            (*C)[i] =diff(M->at(i),new QByteArray(M->at(i)->size(), (char)0x00));
+        }
+
+    }
+    return C;
+}
+
 void MainWindow::closeSocket()
 {
     ethernetController->endSession();
@@ -198,10 +226,10 @@ void MainWindow::setRSocket(FullAddress *rAddress)
 
 void MainWindow::on_actionEthStart_triggered()
 {
-    if(currentFrameOut != NULL)
+    if(_frame != nullptr)
     {
-        ethernetController->read(currentFrameIn);
-        ethernetController->write(new QByteArray(currentFrameOut->getData()));
+        ethernetController->read(_frame);
+        ethernetController->write(_frame);
         //currentSerialPort->close();
     }
 }
@@ -228,7 +256,7 @@ void MainWindow::on_actionStart_triggered()
         outSelect = 1;
     }
 
-    if(currentFrameOut == NULL)
+    if(_frame == nullptr)
     {
         return;
     }
@@ -236,18 +264,18 @@ void MainWindow::on_actionStart_triggered()
     {
         switch (outSelect) {
         case 0:
-            usbDeviceController->read(currentFrameIn);
+            usbDeviceController->read(_frame);
             break;
         case 1:
-            ethernetController->read(currentFrameIn);
+            ethernetController->read(_frame);
             break;
         }
         switch (inSelect) {
         case 0:
-            usbDeviceController->write(new QByteArray(currentFrameOut->getData()));
+            usbDeviceController->write(_frame);
             break;
         case 1:
-            ethernetController->write(new QByteArray(currentFrameOut->getData()));
+            ethernetController->write(_frame);
         }
     }
 
@@ -267,13 +295,13 @@ void MainWindow::on_pushButtonIn_clicked()
 
     switch (inSelect) {
     case 0:
-        if(currentFrameOut != NULL)
+        if(_frame == nullptr)
         {
             usbDeviceController->startInSession();
         }
         break;
     case 1:
-        if(currentFrameOut != NULL)
+        if(_frame == nullptr)
         {
             ethernetController->startInSession();
         }
@@ -295,13 +323,13 @@ void MainWindow::on_pushButtonOut_clicked()
 
     switch (outSelect) {
     case 0:
-        if(currentFrameOut != NULL)
+        if(_frame == nullptr)
         {
             usbDeviceController->startOutSession();
         }
         break;
     case 1:
-        if(currentFrameOut != NULL)
+        if(_frame == nullptr)
         {
             ethernetController->startOutSession();
         }

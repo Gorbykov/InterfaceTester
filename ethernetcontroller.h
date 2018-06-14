@@ -3,8 +3,8 @@
 
 #include <QObject>
 #include <QUdpSocket>
-#include "frameIn.h"
 #include <QtCore>
+#include "frame.h"
 
 #define TIMEOUT 10000
 
@@ -26,8 +26,8 @@ class EthernetController : public QObject
 public:
     explicit EthernetController(QObject *parent = nullptr);
     ~EthernetController();
-    void read(FrameIn* currentFrameIn);
-    void write(QByteArray* data);
+    void read(Frame* currentFrame);
+    void write(Frame* currentFrame);
 
     bool startSession();
     bool startInSession();
@@ -46,16 +46,19 @@ public:
     void setTSocket( FullAddress *tAddress);
     void setRSocket( FullAddress *rAddress);
 signals:
-    void refreshFrameIn();
+    void refreshFrameOut();
 
 private:
     QUdpSocket *_tSocket = nullptr;
     FullAddress *_tAddress = nullptr;
     FullAddress *_rAddress = nullptr;
     QUdpSocket *_rSocket = nullptr;
-    QByteArray _readData;
+    QVector<QByteArray*>* _readData = nullptr;
+    QVector<int>* _readDelays = nullptr;
     QTimer _timer;
-    FrameIn* _currentFrameIn;
+    QTimer _writeTiemr;
+    QTimer _readTiemr;
+    Frame* _currentFrame;
     bool _inReady = false;
     bool _outReady = false;
 

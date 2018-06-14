@@ -2,9 +2,7 @@
 #define FRAMESETTINGSWINDOW_H
 
 #include <QDialog>
-
-#include "frameIn.h"
-#include "frameOut.h"
+#include "frame.h"
 
 namespace Ui {
 class FrameSettingsWindow;
@@ -15,16 +13,15 @@ class FrameSettingsWindow : public QDialog
     Q_OBJECT
 
 public:
-    explicit FrameSettingsWindow(QWidget *parent = 0, FrameIn *currentFrameIn = nullptr, FrameOut *currentFrameOut = nullptr);
+    explicit FrameSettingsWindow(QWidget *parent = 0, Frame *currentFrame = nullptr);
     ~FrameSettingsWindow();
 
 private slots:
     void on_saveButton_clicked();
 
 signals:
-    void setFrameIn(FrameIn *newFrameIn);
-    void setFrameOut(FrameOut *newFrameOut);
-    void refreshFrameIn();
+    void setFrame(Frame *newFrame);
+    void refreshFrameOut();
 
 private:
     Ui::FrameSettingsWindow *ui;

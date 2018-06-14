@@ -4,7 +4,7 @@
 
 UsbDeviceController::UsbDeviceController(QWidget *parent)
 {
-    connect(this, SIGNAL(refreshFrameIn()), parent, SLOT(refreshFrameIn()));
+    connect(this, SIGNAL(refreshFrameOut()), parent, SLOT(refreshFrameOut()));
     connect(&_timer, &QTimer::timeout, this, &UsbDeviceController::handleTimeout);
     //QObject::connect(this, &UsbDeviceController::refreshFrameIn, )
 }
@@ -72,16 +72,21 @@ QSerialPort* UsbDeviceController::getDevice()
 }
 
 
-void UsbDeviceController::write(QByteArray *data)
+void UsbDeviceController::write(Frame *currentFrame)
 {
-    if(isReady())
+    if(!isReady())
     {
         return;
     }
-        _currentSerialPort->write(*data);
+    for (int i =0; i<currentFrame->getDelaysIn()->size();i++)
+    {
+        _writeTiemr.singleShot(currentFrame->getDelaysIn()->at(i),Qt::PreciseTimer,[=]{
+            _currentSerialPort->write(*(currentFrame->getDataIn()->at(i)));
+        });
+    }
 }
 
-void UsbDeviceController::read(FrameIn *currentFrameIn)
+void UsbDeviceController::read(Frame *currentFrame)
 {
     if(!isReady())
     {
@@ -89,20 +94,25 @@ void UsbDeviceController::read(FrameIn *currentFrameIn)
     }
     connect(_currentSerialPort, &QSerialPort::readyRead, this, &UsbDeviceController::handleReadyRead);
     connect(_currentSerialPort, &QSerialPort::errorOccurred, this, &UsbDeviceController::handleError);
-    _currentFrameIn = currentFrameIn;
-    _readData.clear();
-    _currentFrameIn->setData(_readData);
+    _currentFrame = currentFrame;
+    delete _readData;
+    delete _readDelays;
+    _readDelays = new QVector<int>();
+    _currentFrame->setDelaysOut(_readDelays);
+    _readData = new QVector<QByteArray*>();
+    _currentFrame->setDataOut(_readData);
     _timer.setSingleShot(true);
     _timer.start(TIMEOUT);
 }
 
 void UsbDeviceController::handleReadyRead()
 {
-    _readData.append(_currentSerialPort->readAll());
-    _currentFrameIn->setData(_readData);
-    emit refreshFrameIn();
-    if (!_timer.isActive())
-        _timer.start(TIMEOUT);
+    _readData->push_back(new QByteArray(_currentSerialPort->readAll()));
+    _currentFrame->setDataOut(_readData);
+    _readDelays->push_back(TIMEOUT - _timer.remainingTime());
+    _currentFrame->setDelaysOut(_readDelays);
+    emit refreshFrameOut();
+    _timer.start(TIMEOUT);
 }
 
 void UsbDeviceController::handleTimeout()
@@ -115,8 +125,8 @@ void UsbDeviceController::handleTimeout()
 
 void UsbDeviceController::handleError(QSerialPort::SerialPortError serialPortError)
 {
-        _readData.append(_currentSerialPort->errorString());
-        _currentFrameIn->setData(_readData);
-        emit refreshFrameIn();
+//        _readData.append(_currentSerialPort->errorString());
+//        _currentFrameIn->setData(_readData);
+//        emit refreshFrameIn();
 
 }

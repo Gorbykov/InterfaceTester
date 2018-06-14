@@ -5,34 +5,69 @@
 #include <QFile>
 #include <QByteArray>
 
-#define DEFAULT_SIZE 16
-#define DEFAULT_DELAY 1000
+#define DEFAULT_IN "in.hex"
+#define DEFAULT_OUT "out.hex"
+#define DEFAULT_OUT_DELAYS "out_delays.txt"
+#define DEFAULT_IN_DELAYS "in_delays.txt"
+
+enum class Direction
+  {
+     in,
+     out
+  };
 
 class Frame
 {
 public:
     Frame();    
-    Frame(QString frameName, QString fileName, int size, int delay);
-    void setData(QByteArray data);
-    void setFrameName(QString frameName);
-    void setFileName(QString fileName);
-	void setSize(int size);
-	void setDelay(int delay);
-    QByteArray getData();
-	int getSize();
-	int getDelay();
-    QString getFrameName();
-    QString getFileName();
-    bool loadFile(QString fileName);
-    bool saveFile(QString fileName);
-	bool saveFile();    
-    bool isEmpty();
+    Frame(QString folderName);
+    void setDataIn(QVector<QByteArray*> *dataIn);
+    void setDelaysIn(QVector<int> *delaysIn);
+    void setDataOut(QVector<QByteArray*> *dataOut);
+    void setDelaysOut(QVector<int> *delaysOut);
+    void setFolderName(QString folderName);
+    //void setFileName(QString fileName);
+    //void setSize(int size);
+    //void setDelay(int delay);
+    QVector<QByteArray*>* getDataIn();
+    QVector<int>* getDelaysIn();
+    QVector<QByteArray*>* getDataOut();
+    QVector<int>* getDelaysOut();
+    QString getFolderName();
+    //int getSize();
+    //int getDelay();
+    //QString getFrameName();
+    //QString getFileName();
+    //bool loadFile(QString fileName);
+    //bool saveFile(QString fileName);
+    //bool saveFile();
+    bool saveAll();
+    bool saveAll(QString folderName);
+
+    bool saveIn();
+    bool saveIn(QString folderName);
+
+    bool saveOut();
+    bool saveOut(QString folderName);
+
+    bool openAll();
+    bool openAll(QString folderName);
+
+    bool openIn();
+    bool openIn(QString folderName);
+
+    bool openOut();
+    bool openOut(QString folderName);
+
 private:
-    QString _fileName;
-    QString _frameName;
-    QByteArray* _data = NULL;
-	int _size;
-    int _delay;
+    bool _save(QString folderName, Direction direction);
+    bool _open(QString folderName, Direction direction);
+
+    QString _folderName;
+    QVector<QByteArray*> *_dataIn = nullptr;
+    QVector<int> *_delaysIn = nullptr;
+    QVector<QByteArray*> *_dataOut = nullptr;
+    QVector<int> *_delaysOut = nullptr;
 };
 
 #endif // FRAME_H

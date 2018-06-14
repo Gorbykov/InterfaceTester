@@ -2,163 +2,299 @@
 #include <QFile>
 #include <QTextStream>
 #include <QMessageBox>
+#include <QDir>
+#include <QDebug>
 
 Frame::Frame()
 {
-    _data = new QByteArray("");
 }
 
-Frame::Frame(QString frameName, QString fileName, int size, int delay)
+Frame::Frame(QString folderName)
 {
     Frame();
-    this->setFrameName(frameName);    
-    this->setFileName(fileName);
-    this->setSize(size);
-    this->setDelay(delay);
+    _folderName = folderName;
 }
 
 
-bool Frame::loadFile(QString fileName)
+//bool Frame::loadFile(QString fileName)
+//{
+//    QString dataFileName = fileName + ".hex";
+//    QString settingsFileName = fileName + ".conf";
+//    QFile dataFile(dataFileName);
+//    QFile settingsFile(settingsFileName);
+//    bool settingsOpenStatus;
+//    if (_size==-1 || _delay==-1)
+//    {
+//        settingsOpenStatus = settingsFile.open(QIODevice::ReadOnly);
+//        if (!settingsOpenStatus)
+//        {
+//            QMessageBox::information(0, "Ошибка открытия файла", settingsFile.errorString());
+//            bool dataOpenStatus = settingsFile.open(QIODevice::ReadWrite);
+//            QMessageBox::information(0,"","Создан новый пустой файл: " + settingsFileName);
+//            if (!dataOpenStatus)
+//            {
+//                QMessageBox::information(0, "Ошибка открытия файла", dataFile.errorString());
+//            }
+//            else
+//            {
+//                _size = DEFAULT_SIZE;
+//                _delay = DEFAULT_DELAY;
+//                QTextStream settingsFileStream(&settingsFile);
+//                settingsFileStream << _size << '\n' << _delay;
+//            }
+//        }
+//        else
+//        {
+//            bool *ok = new bool(true);
+//            _size = settingsFile.readLine().toInt(ok);
+//            if(! *ok ) _size = DEFAULT_SIZE;
+//            _delay = settingsFile.readLine().toInt(ok);
+//            if(! *ok ) _delay = DEFAULT_DELAY;
+//        }
+//    }
+//    else
+//    {
+//        settingsOpenStatus = settingsFile.open(QIODevice::ReadWrite);
+//        if (!settingsOpenStatus)
+//        {
+//            QMessageBox::information(0, "Ошибка открытия файла", settingsFile.errorString());
+//        }
+//        else
+//        {
+//            QTextStream settingsFileStream(&settingsFile);
+//            settingsFileStream << _size << '\n' << _delay;
+//        }
+//    }
+//    bool dataOpenStatus = dataFile.open(QIODevice::ReadOnly);
+//    if (!dataOpenStatus) {
+
+//        bool dataOpenStatus = dataFile.open(QIODevice::ReadWrite);
+//        QMessageBox::information(0,"","Создан новый пустой файл: " + dataFileName);
+//        if (!dataOpenStatus)
+//        {
+//            QMessageBox::information(0, "Ошибка открытия файла", dataFile.errorString());
+//        }
+//	}
+//	else
+//	{
+//        _data = new QByteArray(dataFile.readAll());
+//	}
+//    dataFile.close();
+//    settingsFile.close();
+//    return dataOpenStatus||settingsOpenStatus;
+//}
+
+//bool Frame::saveFile(QString fileName)
+//{
+//    QString dataFileName = fileName + ".hex";
+//    QFile file(dataFileName);
+//	bool openStatus = file.open(QIODevice::WriteOnly);
+//	if (!openStatus) {
+//        QMessageBox::information(0, "File save error", file.errorString());
+//	}
+//	else
+//	{
+//        file.write(*_data);
+//	}
+//	file.close();
+//	return openStatus;
+//}
+
+void Frame::setDataIn(QVector<QByteArray*> *dataIn)
 {
-    QString dataFileName = fileName + ".hex";
-    QString settingsFileName = fileName + ".conf";
+    _dataIn = dataIn;
+}
+
+void Frame::setDelaysIn(QVector<int> *delaysIn)
+{
+    _delaysIn = delaysIn;
+}
+
+void Frame::setDataOut(QVector<QByteArray*> *dataOut)
+{
+    _dataOut = dataOut;
+}
+
+void Frame::setDelaysOut(QVector<int> *delaysOut)
+{
+    _delaysIn = delaysOut;
+}
+
+
+void Frame::setFolderName(QString folderName)
+{
+    _folderName = folderName;
+}
+
+
+QVector<QByteArray*>* Frame::getDataIn()
+{
+    return _dataIn;
+}
+
+QVector<int> *Frame::getDelaysIn()
+{
+    return _delaysIn;
+}
+
+QVector<QByteArray*>* Frame::getDataOut()
+{
+    return _dataOut;
+}
+
+QVector<int> *Frame::getDelaysOut()
+{
+    return _delaysOut;
+}
+
+QString Frame::getFolderName()
+{
+    return _folderName;
+}
+
+bool Frame::saveAll()
+{
+    return saveAll(_folderName);
+}
+
+bool Frame::saveAll(QString folderName)
+{
+    return saveIn(folderName) && saveOut(folderName);
+}
+
+bool Frame::saveIn()
+{
+    return saveIn(_folderName);
+}
+
+bool Frame::saveIn(QString folderName)
+{
+    return _save(folderName,Direction::in);
+}
+
+bool Frame::saveOut()
+{
+    return saveOut(_folderName);
+}
+
+bool Frame::saveOut(QString folderName)
+{
+    return _save(folderName,Direction::out);
+}
+///////////////
+
+bool Frame::openAll()
+{
+    return openAll(_folderName);
+}
+
+bool Frame::openAll(QString folderName)
+{
+    return openIn(folderName) && openOut(folderName);
+}
+
+bool Frame::openIn()
+{
+    return openIn(_folderName);
+}
+
+bool Frame::openIn(QString folderName)
+{
+    return _open(folderName,Direction::in);
+}
+
+bool Frame::openOut()
+{
+    return openOut(_folderName);
+}
+
+bool Frame::openOut(QString folderName)
+{
+    return _open(folderName, Direction::out);
+}
+
+////////////////////
+
+bool Frame::_save(QString folderName, Direction direction)
+{
+
+}
+
+bool Frame::_open(QString folderName,  Direction direction)
+{
+    bool ok;
+    QString dataFileName;
+    QString delaysFileName;
+    QVector<int> *delays;
+    QVector<QByteArray*> *data;
+    if(direction == Direction::in)
+    {
+        dataFileName = DEFAULT_IN;
+        delaysFileName = DEFAULT_IN_DELAYS;
+    }
+    else if(direction == Direction::out)
+    {
+        dataFileName = DEFAULT_OUT;
+        delaysFileName = DEFAULT_OUT_DELAYS;
+    }
+    delays = new QVector<int>();
+    data = new QVector<QByteArray*>();
+
+    qDebug() << QDir::currentPath();
+
+    if (!QDir::setCurrent(folderName))
+       QMessageBox::warning(0,"Ошибка открытия папки","Невозможно открыть папку");
+    qDebug() << QDir::currentPath();
+
     QFile dataFile(dataFileName);
-    QFile settingsFile(settingsFileName);
-    bool settingsOpenStatus;
-    if (_size==-1 || _delay==-1)
+    QFile delaysFile(delaysFileName);
+
+    ok = dataFile.open(QIODevice::ReadOnly);
+    if (!ok)
     {
-        settingsOpenStatus = settingsFile.open(QIODevice::ReadOnly);
-        if (!settingsOpenStatus)
-        {
-            QMessageBox::information(0, "Ошибка открытия файла", settingsFile.errorString());
-            bool dataOpenStatus = settingsFile.open(QIODevice::ReadWrite);
-            QMessageBox::information(0,"","Создан новый пустой файл: " + settingsFileName);
-            if (!dataOpenStatus)
-            {
-                QMessageBox::information(0, "Ошибка открытия файла", dataFile.errorString());
-            }
-            else
-            {
-                _size = DEFAULT_SIZE;
-                _delay = DEFAULT_DELAY;
-                QTextStream settingsFileStream(&settingsFile);
-                settingsFileStream << _size << '\n' << _delay;
-            }
-        }
-        else
-        {            
-            bool *ok = new bool(true);
-            _size = settingsFile.readLine().toInt(ok);
-            if(! *ok ) _size = DEFAULT_SIZE;
-            _delay = settingsFile.readLine().toInt(ok);
-            if(! *ok ) _delay = DEFAULT_DELAY;
-        }
+        return ok;
     }
-    else
+    ok = delaysFile.open(QIODevice::ReadOnly);
+    if (!ok)
     {
-        settingsOpenStatus = settingsFile.open(QIODevice::ReadWrite);
-        if (!settingsOpenStatus)
-        {
-            QMessageBox::information(0, "Ошибка открытия файла", settingsFile.errorString());
-        }
-        else
-        {
-            QTextStream settingsFileStream(&settingsFile);
-            settingsFileStream << _size << '\n' << _delay;
-        }
+        return ok;
     }
-    bool dataOpenStatus = dataFile.open(QIODevice::ReadOnly);
-    if (!dataOpenStatus) {
 
-        bool dataOpenStatus = dataFile.open(QIODevice::ReadWrite);
-        QMessageBox::information(0,"","Создан новый пустой файл: " + dataFileName);
-        if (!dataOpenStatus)
+    QByteArray dataAll = dataFile.readAll();
+    QTextStream delaysStram(&delaysFile);
+    QVector<int> sizes;
+
+    while (!delaysStram.atEnd())
+    {
+        QString line = delaysStram.readLine();
+        QStringList parameters =  line.split(' ');
+        sizes.push_back(parameters.at(0).toInt());
+        delays->push_back(parameters.at(1).toInt());
+    }
+    int p = 0;
+    for (int i = 0; (i<sizes.size());i++)
+    {
+        if (p+sizes[i] > dataAll.size())
         {
-            QMessageBox::information(0, "Ошибка открытия файла", dataFile.errorString());
+            break;
         }
-	}
-	else
-	{
-        _data = new QByteArray(dataFile.readAll());
-	}
-    dataFile.close();
-    settingsFile.close();
-    return dataOpenStatus||settingsOpenStatus;
-}
+        data->push_back(new QByteArray(dataAll.mid(p,sizes[i])));
+        p +=sizes[i];
+    }
 
-bool Frame::saveFile(QString fileName)
-{    
-    QString dataFileName = fileName + ".hex";
-    QFile file(dataFileName);
-	bool openStatus = file.open(QIODevice::WriteOnly);
-	if (!openStatus) {
-        QMessageBox::information(0, "File save error", file.errorString());
-	}
-	else
-	{
-        file.write(*_data);
-	}
-	file.close();
-	return openStatus;
-}
-
-bool Frame::saveFile()
-{
-    return saveFile(_fileName);
-}
-
-void Frame::setData(QByteArray data)
-{
-    _data = new QByteArray(data);
-}
-
-void Frame::setFrameName(QString frameName)
-{
-    _frameName = frameName;
-}
-
-void Frame::setFileName(QString fileName)
-{
-    _fileName = fileName;
-}
-
-
-void Frame::setDelay(int delay)
-{
-	_delay = delay;
-}
-
-void Frame::setSize(int size)
-{
-	_size = size;
-}
-
-QByteArray Frame::getData()
-{
-    return *_data;
-}
-
-QString Frame::getFrameName()
-{
-    return _frameName;
-}
-
-QString Frame::getFileName()
-{
-    return _fileName;
-}
-
-int Frame::getDelay()
-{
-	return _delay;
-}
-
-int Frame::getSize()
-{
-	return _size;
-}
-
-bool Frame::isEmpty()
-{
-    return _data->isEmpty();
+    if(direction == Direction::in)
+    {
+        delete _delaysIn;
+        delete _dataIn;
+        _delaysIn = delays;
+        _dataIn = data;
+    }
+    if(direction == Direction::out)
+    {
+        delete _delaysOut;
+        delete _dataOut;
+        _delaysOut = delays;
+        _dataOut = data;
+    }
+    return ok;
 }

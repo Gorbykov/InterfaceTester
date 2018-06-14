@@ -3,8 +3,8 @@
 #include <QtCore>
 #include <QtSerialPort/QSerialPortInfo>
 #include <QtSerialPort/QtSerialPort>
-#include "frameIn.h"
 #include <QTextEdit>
+#include "frame.h"
 
 //#include "mainwindow.h"
 
@@ -27,20 +27,23 @@ public:
     bool isReady();
 
     QSerialPort* getDevice();
-    void read(FrameIn* currentFrameIn);
-    void write(QByteArray* data);
+    void read(Frame* currentFrame);
+    void write(Frame *currentFrame);
     void setDevice(QSerialPort* dev);
     QList<QSerialPortInfo> getDeviceList();
 
 signals:
-    void refreshFrameIn();
+    void refreshFrameOut();
 
 private:
     QList<QSerialPortInfo> _deviceList;
     QTimer _timer;
-    QSerialPort *_currentSerialPort = NULL;
-    QByteArray _readData;
-    FrameIn* _currentFrameIn;
+    QTimer _writeTiemr;
+    QTimer _readTiemr;
+    QSerialPort *_currentSerialPort  = nullptr;
+    QVector<QByteArray*>* _readData = nullptr;
+    QVector<int> *_readDelays = nullptr;
+    Frame* _currentFrame = nullptr;
     bool _ready = false;
 
 private slots:

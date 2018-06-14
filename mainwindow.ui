@@ -22,12 +22,15 @@
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
-     <widget class="QTextEdit" name="textEditOut">
+     <widget class="QTextEdit" name="textEditIn">
       <property name="font">
        <font>
         <family>Consolas</family>
         <pointsize>12</pointsize>
        </font>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
       </property>
       <property name="tabStopWidth">
        <number>48</number>
@@ -35,7 +38,7 @@
      </widget>
     </item>
     <item>
-     <widget class="QTextEdit" name="textEditIn">
+     <widget class="QTextEdit" name="textEditOut">
       <property name="font">
        <font>
         <family>Consolas</family>

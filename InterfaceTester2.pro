@@ -26,9 +26,7 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     frame.cpp \
-    frameOut.cpp \
     framesettingswindow.cpp \
-    frameIn.cpp \
     usbdevicecontroller.cpp \
     usbsettingswindow.cpp \
     ethernetsettingwindow.cpp \
@@ -37,8 +35,6 @@ SOURCES += \
 HEADERS += \
         mainwindow.h \
     frame.h \
-    frameIn.h \
-    frameOut.h \
     framesettingswindow.h \
     usbdevicecontroller.h \
     usbsettingswindow.h \

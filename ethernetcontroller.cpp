@@ -3,7 +3,7 @@
 
 EthernetController::EthernetController(QObject *parent) : QObject(parent)
 {
-    connect(this, SIGNAL(refreshFrameIn()), parent, SLOT(refreshFrameIn()));
+    connect(this, SIGNAL(refreshFrameOut()), parent, SLOT(refreshFrameOut()));
     connect(&_timer, &QTimer::timeout, this, &EthernetController::handleTimeout);
 }
 
@@ -119,38 +119,55 @@ void EthernetController::endOutSession()
     }
     _outReady = false;
 }
-void EthernetController::read(FrameIn* currentFrameIn)
-{
-    if (!isInReady())
-    {
-        return;
-    }
-    _currentFrameIn = currentFrameIn;
-    _readData.clear();
-    _currentFrameIn->setData(_readData);
-    _timer.setSingleShot(true);
-    _timer.start(TIMEOUT);
-}
 
-void EthernetController::write(QByteArray* data)
+void EthernetController::write(Frame *currentFrame)
 {
     if (!isOutReady())
     {
         return;
     }
-    _tSocket->writeDatagram(*data,_rAddress->ip,_rAddress->port);
+    for (int i =0; i<currentFrame->getDelaysIn()->size();i++)
+    {
+        _writeTiemr.singleShot(currentFrame->getDelaysIn()->at(i),Qt::PreciseTimer,[=]{
+            _tSocket->writeDatagram(*(currentFrame->getDataIn()->at(i)),_rAddress->ip,_rAddress->port);
+        });
+    }
+}
+
+void EthernetController::read(Frame *currentFrame)
+{
+    if (!isInReady())
+    {
+        return;
+    }
+    _currentFrame = currentFrame;
+    delete _readData;
+    delete _readDelays;
+    _readDelays = new QVector<int>();
+    _currentFrame->setDelaysOut(_readDelays);
+    _readData = new QVector<QByteArray*>();
+    _currentFrame->setDataOut(_readData);
+    _timer.setSingleShot(true);
+    _timer.start(TIMEOUT);
 }
 
 
 void EthernetController::handleReadyRead()
 {
-    _readData.resize(_rSocket->pendingDatagramSize());
-    _rSocket->readDatagram(_readData.data(),_readData.size());
-    _currentFrameIn->setData(_readData);
-    emit refreshFrameIn();
-    if (!_timer.isActive())
-        _timer.start(TIMEOUT);
-    qDebug()<<(QString::fromUtf8( _readData))<<"/n";
+    //    _readData->push_back(new QByteArray(_currentSerialPort->readAll()));
+    //    _currentFrame->setDataOut(_readData);
+    //    _readDelays->push_back(TIMEOUT - _timer.remainingTime());
+    //    _currentFrame->setDelaysOut(_readDelays);
+    //    emit refreshFrameIn();
+    //    _timer.start(TIMEOUT);
+    _readData->push_back(new QByteArray(_rSocket->pendingDatagramSize(),'/0'));
+    _rSocket->readDatagram(_readData->back()->data(),_readData->back()->size());
+    _currentFrame->setDataOut(_readData);
+    _readDelays->push_back(TIMEOUT - _timer.remainingTime());
+    _currentFrame->setDelaysOut(_readDelays);
+    emit refreshFrameOut();
+    _timer.start(TIMEOUT);
+    //qDebug()<<(QString::fromUtf8( _readData))<<"/n";
 }
 
 void EthernetController::handleTimeout()
