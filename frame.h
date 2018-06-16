@@ -33,6 +33,8 @@ public:
     QVector<int>* getDelaysIn();
     QVector<QByteArray*>* getDataOut();
     QVector<int>* getDelaysOut();
+    QVector<int>* getSizesIn();
+    QVector<int>* getSizesOut();
     QString getFolderName();
     //int getSize();
     //int getDelay();

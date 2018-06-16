@@ -11,7 +11,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    usbDeviceController = new UsbDeviceController(this);
+    //usbDeviceController = new UsbDeviceController(this);
     ethernetController = new EthernetController(this);
 }
 
@@ -29,21 +29,31 @@ void MainWindow::setFrame(Frame *newFrame)
     {
         QMessageBox::warning(0,"Ошибка открытия файлов","Невозможно открыть файлы");
     }
-    printToTextEdit(_frame->getDataIn(),ui->textEditIn);
+    printToTextEdit(_frame->getDataIn(),ui->textEditIn);    
+    printDelays(_frame->getDelaysIn(),_frame->getSizesIn(),ui->textEditInDelays);
     //printToTextEdit(_frame->getDataOut(),ui->textEditOut);
     refreshFrameOut();
 }
 
 void::MainWindow::setUSB(QSerialPort *newPort)
 {
-    usbDeviceController->setDevice(newPort);
+    //usbDeviceController->setDevice(newPort);
 }
 
 void::MainWindow::closeUSB()
 {
-    usbDeviceController->endSession();
+   // usbDeviceController->endSession();
 }
 
+
+void MainWindow::printDelays(QVector<int>* delays, QVector<int>* sizes,  QTextEdit *textEdit)
+{
+    textEdit->clear();
+    for(int i = 0; i < delays->size(); i++ )
+    {
+        textEdit->append(QString::number(sizes->at(i)) + " " + QString::number(delays->at(i)) );
+    }
+}
 
 void MainWindow::printToTextEdit(QVector<QByteArray*> *data, QTextEdit *textEdit)
 {
@@ -67,7 +77,7 @@ void MainWindow::printToTextEdit(QByteArray *text, QTextEdit *textEdit)
     {
         textEdit->setText(text->toHex(' '));
     }
-    else if(viewType=="ASCII")
+    else if(viewType=="UTF-8")
     {
         textEdit->setText(*text);
     }
@@ -88,7 +98,7 @@ QByteArray* MainWindow::scanFromTextEdit(QTextEdit *textEdit)
         }
         text = new QByteArray( QByteArray::fromHex(inStr.toUtf8()));
     }
-    else if(_lastViewType == "ASCII")
+    else if(_lastViewType == "UTF-8")
     {
         text = new QByteArray(inStr.toUtf8());
     }
@@ -97,6 +107,7 @@ QByteArray* MainWindow::scanFromTextEdit(QTextEdit *textEdit)
 
 void MainWindow::on_actionSaveAll_triggered()
 {
+    _frame->saveAll();
 //    QByteArray *text = scanFromTextEdit(ui->textEditOut);
 //    printToTextEdit(text,ui->textEditOut);
 //    //currentFrameOut->setData(*text);
@@ -111,9 +122,9 @@ void MainWindow::on_actionSaveAll_triggered()
 
 void MainWindow::on_actionUsbSettings_triggered()
 {
-    usbSettingsWindow = new UsbSettingsWindow(this, usbDeviceController);
-    usbSettingsWindow->setWindowTitle("Настройка USB");
-    usbSettingsWindow->show();
+//    usbSettingsWindow = new UsbSettingsWindow(this, usbDeviceController);
+//    usbSettingsWindow->setWindowTitle("Настройка USB");
+//    usbSettingsWindow->show();
 }
 
 void MainWindow::on_actionEhtTSettings_triggered()
@@ -138,8 +149,8 @@ void MainWindow::on_actionUSBStart_triggered()
 {
     if(_frame != nullptr)
     {
-        usbDeviceController->write(_frame);
-        usbDeviceController->read(_frame);
+        //usbDeviceController->write(_frame);
+        //usbDeviceController->read(_frame);
         //currentSerialPort->close();
     }
 }
@@ -163,9 +174,43 @@ void MainWindow::on_charView_currentIndexChanged(const QString &arg1)
 void MainWindow::refreshFrameOut()
 {
     printToTextEdit(_frame->getDataOut(),ui->textEditOut);
-    printToTextEdit(diff(_frame->getDataOut(),_frame->getDataIn()),ui->textEditCompere);
+    printDelays(_frame->getDelaysOut(),_frame->getSizesOut(),ui->textEditOutDelays);
+    printToTextEdit(diff(_frame->getDataOut(),_frame->getDataIn()),ui->textEditCompere);    
+    printDelays(diff(_frame->getDelaysOut(),_frame->getDelaysIn()),diff(_frame->getSizesOut(),_frame->getSizesIn()),ui->textEditCompereDelays);
 }
 
+
+QVector<int> *MainWindow::diff(QVector<int> *A, QVector<int> *B)
+{
+    int max = qMax(A->size(),B->size());
+    int min = qMin(A->size(),B->size());
+    int sign = 0;
+    QVector<int>* M;
+    if(A->size()==max)
+    {
+        M = A;
+        sign = 1;
+    }
+    else
+    {
+        M = B;
+        sign = -1;
+    }
+    QVector<int>* C = new QVector<int>( max, 0) ;
+    for (int i = 0 ; i< max ; i++)
+    {
+        if(i<min)
+        {
+            (*C)[i] =(A->at(i) - B->at(i));
+        }
+        else
+        {
+            (*C)[i] =M->at(i)*sign;
+        }
+
+    }
+    return C;
+}
 
 QByteArray *MainWindow::diff(QByteArray *A, QByteArray *B)
 {
@@ -239,18 +284,18 @@ void MainWindow::on_actionStart_triggered()
     int inSelect=-1;
     int outSelect=-1;
 
-    if(ui->radioButtonUsbIn->isChecked())
-    {
-        inSelect = 0;
-    }
+//    if(ui->radioButtonUsbIn->isChecked())
+//    {
+//        inSelect = 0;
+//    }
     if(ui->radioButtonEthIn->isChecked())
     {
         inSelect = 1;
     }
-    if(ui->radioButtonUsbOut->isChecked())
-    {
-        outSelect = 0;
-    }
+//    if(ui->radioButtonUsbOut->isChecked())
+//    {
+//        outSelect = 0;
+//    }
     if(ui->radioButtonEthOut->isChecked())
     {
         outSelect = 1;
@@ -264,7 +309,7 @@ void MainWindow::on_actionStart_triggered()
     {
         switch (outSelect) {
         case 0:
-            usbDeviceController->read(_frame);
+            //usbDeviceController->read(_frame);
             break;
         case 1:
             ethernetController->read(_frame);
@@ -272,7 +317,7 @@ void MainWindow::on_actionStart_triggered()
         }
         switch (inSelect) {
         case 0:
-            usbDeviceController->write(_frame);
+            //usbDeviceController->write(_frame);
             break;
         case 1:
             ethernetController->write(_frame);
@@ -284,10 +329,10 @@ void MainWindow::on_actionStart_triggered()
 void MainWindow::on_pushButtonIn_clicked()
 {
     int inSelect=-1;
-    if(ui->radioButtonUsbIn->isChecked())
-    {
-        inSelect = 0;
-    }
+//    if(ui->radioButtonUsbIn->isChecked())
+//    {
+//        inSelect = 0;
+//    }
     if(ui->radioButtonEthIn->isChecked())
     {
         inSelect = 1;
@@ -295,13 +340,13 @@ void MainWindow::on_pushButtonIn_clicked()
 
     switch (inSelect) {
     case 0:
-        if(_frame == nullptr)
+        if(_frame != nullptr)
         {
-            usbDeviceController->startInSession();
+            //usbDeviceController->startInSession();
         }
         break;
     case 1:
-        if(_frame == nullptr)
+        if(_frame != nullptr)
         {
             ethernetController->startInSession();
         }
@@ -312,10 +357,10 @@ void MainWindow::on_pushButtonIn_clicked()
 void MainWindow::on_pushButtonOut_clicked()
 {
     int outSelect=-1;
-    if(ui->radioButtonUsbOut->isChecked())
-    {
-        outSelect = 0;
-    }
+//    if(ui->radioButtonUsbOut->isChecked())
+//    {
+//        outSelect = 0;
+//    }
     if(ui->radioButtonEthOut->isChecked())
     {
         outSelect = 1;
@@ -323,13 +368,13 @@ void MainWindow::on_pushButtonOut_clicked()
 
     switch (outSelect) {
     case 0:
-        if(_frame == nullptr)
+        if(_frame != nullptr)
         {
-            usbDeviceController->startOutSession();
+            //usbDeviceController->startOutSession();
         }
         break;
     case 1:
-        if(_frame == nullptr)
+        if(_frame != nullptr)
         {
             ethernetController->startOutSession();
         }
@@ -344,6 +389,6 @@ void MainWindow::on_pushButtonStart_clicked()
 
 void MainWindow::on_pushButtonEnd_clicked()
 {
-    usbDeviceController->endSession();
+    //usbDeviceController->endSession();
     ethernetController->endSession();
 }

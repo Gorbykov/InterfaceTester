@@ -19,6 +19,8 @@ public:
 private slots:
     void on_saveButton_clicked();
 
+    void on_pushButtonFolderDialog_clicked();
+
 signals:
     void setFrame(Frame *newFrame);
     void refreshFrameOut();

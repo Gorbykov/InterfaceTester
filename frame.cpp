@@ -117,7 +117,7 @@ void Frame::setDataOut(QVector<QByteArray*> *dataOut)
 
 void Frame::setDelaysOut(QVector<int> *delaysOut)
 {
-    _delaysIn = delaysOut;
+    _delaysOut = delaysOut;
 }
 
 
@@ -145,6 +145,25 @@ QVector<QByteArray*>* Frame::getDataOut()
 QVector<int> *Frame::getDelaysOut()
 {
     return _delaysOut;
+}
+
+
+QVector<int>* Frame::getSizesIn()
+{
+    QVector<int>* sizes = new QVector<int>();
+    for (int i = 0; i < _dataIn->size(); i++) {
+        sizes->push_back(_dataIn->at(i)->size());
+    }
+    return sizes;
+}
+
+QVector<int>* Frame::getSizesOut()
+{
+    QVector<int>* sizes = new QVector<int>();
+    for (int i = 0; i < _dataOut->size(); i++) {
+        sizes->push_back(_dataOut->at(i)->size());
+    }
+    return sizes;
 }
 
 QString Frame::getFolderName()
@@ -217,6 +236,65 @@ bool Frame::openOut(QString folderName)
 
 bool Frame::_save(QString folderName, Direction direction)
 {
+    bool ok;
+    QString dataFileName;
+    QString delaysFileName;
+    QVector<int> *delays;
+    QVector<int> *sizes;
+    QVector<QByteArray*> *data;
+    if(direction == Direction::in)
+    {
+        dataFileName = DEFAULT_IN;
+        delaysFileName = DEFAULT_IN_DELAYS;
+        if (_delaysIn != nullptr && _dataIn != nullptr)
+        {
+            delays = _delaysIn;
+            data = _dataIn;
+            sizes = getSizesIn();
+        }
+    }
+    else if(direction == Direction::out)
+    {
+        dataFileName = DEFAULT_OUT;
+        delaysFileName = DEFAULT_OUT_DELAYS;
+        if (_delaysOut != nullptr && _dataOut != nullptr)
+        {
+            delays = _delaysOut;
+            data = _dataOut;
+            sizes = getSizesOut();
+        }
+    }
+
+    qDebug() << QDir::currentPath();
+    if (!QDir::setCurrent(folderName))
+       QMessageBox::warning(0,"Ошибка открытия папки","Невозможно открыть папку");
+    qDebug() << QDir::currentPath();
+
+    QFile dataFile(dataFileName);
+    QFile delaysFile(delaysFileName);
+
+    ok = dataFile.open(QIODevice::WriteOnly);
+    if (!ok)
+    {
+        return ok;
+    }
+    ok = delaysFile.open(QIODevice::WriteOnly);
+    if (!ok)
+    {
+        return ok;
+    }
+    QDataStream dataStream(&dataFile);
+    QTextStream delaysStream(&delaysFile);
+
+    for(int i = 0; i<data->size(); i++)
+    {
+        dataStream.writeRawData(data->at(i)->data(),data->at(i)->size());
+        delaysStream << (*sizes)[i] << " " << (*delays)[i] << "\r\n";
+    }
+
+    dataFile.close();
+    delaysFile.close();
+    return ok;
 
 }
 
@@ -241,7 +319,6 @@ bool Frame::_open(QString folderName,  Direction direction)
     data = new QVector<QByteArray*>();
 
     qDebug() << QDir::currentPath();
-
     if (!QDir::setCurrent(folderName))
        QMessageBox::warning(0,"Ошибка открытия папки","Невозможно открыть папку");
     qDebug() << QDir::currentPath();
@@ -281,7 +358,8 @@ bool Frame::_open(QString folderName,  Direction direction)
         data->push_back(new QByteArray(dataAll.mid(p,sizes[i])));
         p +=sizes[i];
     }
-
+    dataFile.close();
+    delaysFile.close();
     if(direction == Direction::in)
     {
         delete _delaysIn;

@@ -20,56 +20,176 @@
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
-   <layout class="QHBoxLayout" name="horizontalLayout">
+   <layout class="QHBoxLayout" name="horizontalLayout_4">
     <item>
-     <widget class="QTextEdit" name="textEditIn">
-      <property name="font">
-       <font>
-        <family>Consolas</family>
-        <pointsize>12</pointsize>
-       </font>
+     <widget class="QSplitter" name="splitter">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
       </property>
-      <property name="readOnly">
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="opaqueResize">
        <bool>true</bool>
       </property>
-      <property name="tabStopWidth">
-       <number>48</number>
+      <property name="handleWidth">
+       <number>10</number>
       </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QTextEdit" name="textEditOut">
-      <property name="font">
-       <font>
-        <family>Consolas</family>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="readOnly">
+      <property name="childrenCollapsible">
        <bool>true</bool>
       </property>
-      <property name="tabStopWidth">
-       <number>48</number>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QTextEdit" name="textEditCompere">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="font">
-       <font>
-        <family>Consolas</family>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="readOnly">
-       <bool>true</bool>
-      </property>
-      <property name="tabStopWidth">
-       <number>48</number>
-      </property>
+      <widget class="QWidget" name="horizontalLayoutWidget">
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QTextEdit" name="textEditIn">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="font">
+           <font>
+            <family>Consolas</family>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+          <property name="tabStopWidth">
+           <number>48</number>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QTextEdit" name="textEditOut">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="font">
+           <font>
+            <family>Consolas</family>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+          <property name="tabStopWidth">
+           <number>48</number>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QTextEdit" name="textEditCompere">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="font">
+           <font>
+            <family>Consolas</family>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+          <property name="tabStopWidth">
+           <number>48</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="horizontalLayoutWidget_2">
+       <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <item>
+         <widget class="QTextEdit" name="textEditInDelays">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="font">
+           <font>
+            <family>Consolas</family>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+          <property name="tabStopWidth">
+           <number>48</number>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QTextEdit" name="textEditOutDelays">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="font">
+           <font>
+            <family>Consolas</family>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+          <property name="tabStopWidth">
+           <number>48</number>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QTextEdit" name="textEditCompereDelays">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="font">
+           <font>
+            <family>Consolas</family>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+          <property name="tabStopWidth">
+           <number>48</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
      </widget>
     </item>
     <item>
@@ -95,7 +215,7 @@
            </item>
            <item>
             <property name="text">
-             <string>ASCII</string>
+             <string>UTF-8</string>
             </property>
            </item>
           </widget>
@@ -124,13 +244,6 @@
           </widget>
          </item>
          <item>
-          <widget class="QRadioButton" name="radioButtonUsbIn">
-           <property name="text">
-            <string>USB</string>
-           </property>
-          </widget>
-         </item>
-         <item>
           <widget class="QRadioButton" name="radioButtonEthIn">
            <property name="text">
             <string>Ethernet</string>
@@ -153,13 +266,6 @@
           <widget class="QPushButton" name="pushButtonOut">
            <property name="text">
             <string>Слушать выход</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QRadioButton" name="radioButtonUsbOut">
-           <property name="text">
-            <string>USB</string>
            </property>
           </widget>
          </item>
@@ -206,14 +312,13 @@
      <x>0</x>
      <y>0</y>
      <width>793</width>
-     <height>21</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_2">
     <property name="title">
      <string>Интерфейсы</string>
     </property>
-    <addaction name="actionUsbSettings"/>
     <addaction name="actionEhtTSettings"/>
     <addaction name="actionEhtRSettings"/>
    </widget>

@@ -122,21 +122,37 @@ void EthernetController::endOutSession()
 
 void EthernetController::write(Frame *currentFrame)
 {
-    if (!isOutReady())
+    if (!isInReady())
     {
         return;
     }
-    for (int i =0; i<currentFrame->getDelaysIn()->size();i++)
+    _currentFrame = currentFrame;
+    _delaysPointer = 0;
+    if(_currentFrame->getDelaysIn() != nullptr && !_currentFrame->getDelaysIn()->isEmpty())
     {
-        _writeTiemr.singleShot(currentFrame->getDelaysIn()->at(i),Qt::PreciseTimer,[=]{
-            _tSocket->writeDatagram(*(currentFrame->getDataIn()->at(i)),_rAddress->ip,_rAddress->port);
-        });
+        QTimer::singleShot(_currentFrame->getDelaysIn()->at(_delaysPointer),Qt::PreciseTimer,this,SLOT(writePacket()));
+    }
+    //    for (int i =0; i<currentFrame->getDelaysIn()->size();i++)
+    //    {
+    //        QTimer::singleShot(_currentFrame->getDelaysIn()->at(i),Qt::PreciseTimer,[=]{
+    //            _tSocket->writeDatagram(*(_currentFrame->getDataIn()->at(i)),_rAddress->ip,_rAddress->port);
+    //        });
+    //    }
+}
+
+void EthernetController::writePacket()
+{
+    _tSocket->writeDatagram(*(_currentFrame->getDataIn()->at(_delaysPointer)),_rAddress->ip,_rAddress->port);
+    _delaysPointer++;
+    if(_delaysPointer<_currentFrame->getDelaysIn()->size())
+    {
+        QTimer::singleShot(_currentFrame->getDelaysIn()->at(_delaysPointer),Qt::PreciseTimer,this,SLOT(writePacket()));
     }
 }
 
 void EthernetController::read(Frame *currentFrame)
 {
-    if (!isInReady())
+    if (!isOutReady())
     {
         return;
     }
@@ -164,9 +180,9 @@ void EthernetController::handleReadyRead()
     _rSocket->readDatagram(_readData->back()->data(),_readData->back()->size());
     _currentFrame->setDataOut(_readData);
     _readDelays->push_back(TIMEOUT - _timer.remainingTime());
+    _timer.start(TIMEOUT);
     _currentFrame->setDelaysOut(_readDelays);
     emit refreshFrameOut();
-    _timer.start(TIMEOUT);
     //qDebug()<<(QString::fromUtf8( _readData))<<"/n";
 }
 

@@ -74,9 +74,12 @@ private:
     EthernetController *ethernetController = nullptr;
     EthernetSettingWindow *ethernetSettingWindow = nullptr;
 
+    void printDelays(QVector<int>* delays, QVector<int> *sizes,  QTextEdit *textEdit);
     void printToTextEdit(QVector<QByteArray*> *data, QTextEdit *textEdit);
     void printToTextEdit(QByteArray *text, QTextEdit *textEdit);
-    QByteArray* scanFromTextEdit(QTextEdit *textEdit);
+    void ptintDelays(Frame *frame, QTextEdit *textEdit);
+    QByteArray* scanFromTextEdit(QTextEdit *textEdit);    
+    QVector<int>* diff(QVector<int>* A, QVector<int>* B);
     QByteArray* diff(QByteArray* A, QByteArray* B);
     QVector<QByteArray*>* diff(QVector<QByteArray *> *A, QVector<QByteArray *> *B);
 

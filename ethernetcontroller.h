@@ -56,13 +56,13 @@ private:
     QVector<QByteArray*>* _readData = nullptr;
     QVector<int>* _readDelays = nullptr;
     QTimer _timer;
-    QTimer _writeTiemr;
-    QTimer _readTiemr;
     Frame* _currentFrame;
+    int _delaysPointer = 0;
     bool _inReady = false;
     bool _outReady = false;
 
 private slots:
+    void writePacket();
     void handleReadyRead();
     void handleTimeout();
 
