@@ -284,18 +284,18 @@ void MainWindow::on_actionStart_triggered()
     int inSelect=-1;
     int outSelect=-1;
 
-//    if(ui->radioButtonUsbIn->isChecked())
-//    {
-//        inSelect = 0;
-//    }
+    if(ui->radioButtonRemoteEthIn->isChecked())
+    {
+        inSelect = 0;
+    }
     if(ui->radioButtonEthIn->isChecked())
     {
         inSelect = 1;
     }
-//    if(ui->radioButtonUsbOut->isChecked())
-//    {
-//        outSelect = 0;
-//    }
+    if(ui->radioButtonRemoteEthOut->isChecked())
+    {
+        outSelect = 0;
+    }
     if(ui->radioButtonEthOut->isChecked())
     {
         outSelect = 1;
@@ -309,7 +309,6 @@ void MainWindow::on_actionStart_triggered()
     {
         switch (outSelect) {
         case 0:
-            //usbDeviceController->read(_frame);
             break;
         case 1:
             ethernetController->read(_frame);
@@ -317,7 +316,6 @@ void MainWindow::on_actionStart_triggered()
         }
         switch (inSelect) {
         case 0:
-            //usbDeviceController->write(_frame);
             break;
         case 1:
             ethernetController->write(_frame);
@@ -329,10 +327,10 @@ void MainWindow::on_actionStart_triggered()
 void MainWindow::on_pushButtonIn_clicked()
 {
     int inSelect=-1;
-//    if(ui->radioButtonUsbIn->isChecked())
-//    {
-//        inSelect = 0;
-//    }
+    if(ui->radioButtonRemoteEthIn->isChecked())
+    {
+        inSelect = 0;
+    }
     if(ui->radioButtonEthIn->isChecked())
     {
         inSelect = 1;
@@ -342,7 +340,6 @@ void MainWindow::on_pushButtonIn_clicked()
     case 0:
         if(_frame != nullptr)
         {
-            //usbDeviceController->startInSession();
         }
         break;
     case 1:
@@ -357,10 +354,10 @@ void MainWindow::on_pushButtonIn_clicked()
 void MainWindow::on_pushButtonOut_clicked()
 {
     int outSelect=-1;
-//    if(ui->radioButtonUsbOut->isChecked())
-//    {
-//        outSelect = 0;
-//    }
+    if(ui->radioButtonRemoteEthOut->isChecked())
+    {
+        outSelect = 0;
+    }
     if(ui->radioButtonEthOut->isChecked())
     {
         outSelect = 1;
@@ -370,7 +367,6 @@ void MainWindow::on_pushButtonOut_clicked()
     case 0:
         if(_frame != nullptr)
         {
-            //usbDeviceController->startOutSession();
         }
         break;
     case 1:
