@@ -5,12 +5,11 @@
 #include <QActionGroup>
 
 #include "framesettingswindow.h"
-#include "usbsettingswindow.h"
 #include "ethernetsettingwindow.h"
 
 #include "frame.h"
-#include "usbdevicecontroller.h"
 #include "ethernetcontroller.h"
+#include <QTextEdit>
 
 namespace Ui {
 class MainWindow;
@@ -27,13 +26,13 @@ public:
 
 public slots:
     void setFrame(Frame *newFrame);
-    void setUSB(QSerialPort *newPort);
+    //void setUSB(QSerialPort *newPort);
 
     void setTSocket(FullAddress *tAddress);
     void setRSocket( FullAddress *rAddress);
     void closeSocket();
 
-    void closeUSB();
+    //void closeUSB();
     void refreshFrameOut();
 
 private slots:
@@ -69,8 +68,6 @@ private:
     QString _lastViewType = "HEX";
     Ui::MainWindow *ui;
     FrameSettingsWindow *frameSettings = nullptr;
-    UsbSettingsWindow *usbSettingsWindow = nullptr;
-    UsbDeviceController *usbDeviceController = nullptr;
     EthernetController *ethernetController = nullptr;
     EthernetSettingWindow *ethernetSettingWindow = nullptr;
 

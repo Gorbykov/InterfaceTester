@@ -1,7 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "framesettingswindow.h"
-#include "usbsettingswindow.h"
 
 #include <QMessageBox>
 #include <QtGlobal>
@@ -35,15 +34,15 @@ void MainWindow::setFrame(Frame *newFrame)
     refreshFrameOut();
 }
 
-void::MainWindow::setUSB(QSerialPort *newPort)
-{
-    //usbDeviceController->setDevice(newPort);
-}
+//void::MainWindow::setUSB(QSerialPort *newPort)
+//{
+//    //usbDeviceController->setDevice(newPort);
+//}
 
-void::MainWindow::closeUSB()
-{
-   // usbDeviceController->endSession();
-}
+//void::MainWindow::closeUSB()
+//{
+//   // usbDeviceController->endSession();
+//}
 
 
 void MainWindow::printDelays(QVector<int>* delays, QVector<int>* sizes,  QTextEdit *textEdit)

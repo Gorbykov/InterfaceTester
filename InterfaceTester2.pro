@@ -27,8 +27,6 @@ SOURCES += \
         mainwindow.cpp \
     frame.cpp \
     framesettingswindow.cpp \
-    usbdevicecontroller.cpp \
-    usbsettingswindow.cpp \
     ethernetsettingwindow.cpp \
     ethernetcontroller.cpp
 
@@ -36,15 +34,12 @@ HEADERS += \
         mainwindow.h \
     frame.h \
     framesettingswindow.h \
-    usbdevicecontroller.h \
-    usbsettingswindow.h \
     ethernetsettingwindow.h \
     ethernetcontroller.h
 
 FORMS += \
      mainwindow.ui \
      framesettingswindow.ui \
-    usbsettingswindow.ui \
     ethernetsettingwindow.ui
 
 QT += network
