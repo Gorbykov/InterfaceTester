@@ -27,6 +27,9 @@ void MainWindow::setFrame(Frame *newFrame)
     if(!_frame->openAll())
     {
         QMessageBox::warning(0,"Ошибка открытия файлов","Невозможно открыть файлы");
+        delete _frame;
+        _frame = nullptr;
+        return;
     }
     printToTextEdit(_frame->getDataIn(),ui->textEditIn);    
     printDelays(_frame->getDelaysIn(),_frame->getSizesIn(),ui->textEditInDelays);
@@ -172,6 +175,10 @@ void MainWindow::on_charView_currentIndexChanged(const QString &arg1)
 
 void MainWindow::refreshFrameOut()
 {
+    if(_frame == nullptr)
+    {
+        return;
+    }
     printToTextEdit(_frame->getDataOut(),ui->textEditOut);
     printDelays(_frame->getDelaysOut(),_frame->getSizesOut(),ui->textEditOutDelays);
     printToTextEdit(diff(_frame->getDataOut(),_frame->getDataIn()),ui->textEditCompere);    
