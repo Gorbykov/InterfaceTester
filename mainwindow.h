@@ -63,6 +63,7 @@ private slots:
 
     void on_pushButtonOut_clicked();
 
+
 private:
     Frame *_frame = nullptr;
     QString _lastViewType = "HEX";

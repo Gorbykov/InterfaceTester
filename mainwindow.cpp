@@ -110,15 +110,6 @@ QByteArray* MainWindow::scanFromTextEdit(QTextEdit *textEdit)
 void MainWindow::on_actionSaveAll_triggered()
 {
     _frame->saveAll();
-//    QByteArray *text = scanFromTextEdit(ui->textEditOut);
-//    printToTextEdit(text,ui->textEditOut);
-//    //currentFrameOut->setData(*text);
-//    //currentFrameOut->saveFile();
-//    text = scanFromTextEdit(ui->textEditIn);
-//    printToTextEdit(text,ui->textEditIn);
-//    //currentFrameIn->setData(*text);
-//    //currentFrameIn->saveFile();
-//    refreshFrameOut();
 }
 
 

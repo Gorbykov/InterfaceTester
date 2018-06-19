@@ -326,12 +326,12 @@ bool Frame::_open(QString folderName,  Direction direction)
     QFile dataFile(dataFileName);
     QFile delaysFile(delaysFileName);
 
-    ok = dataFile.open(QIODevice::ReadOnly);
+    ok = dataFile.open(QIODevice::ReadWrite);
     if (!ok)
     {
         return ok;
     }
-    ok = delaysFile.open(QIODevice::ReadOnly);
+    ok = delaysFile.open(QIODevice::ReadWrite);
     if (!ok)
     {
         return ok;
