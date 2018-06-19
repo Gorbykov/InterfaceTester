@@ -22,19 +22,24 @@ public:
     Frame();    
     Frame(QString folderName);
     void setDataIn(QVector<QByteArray*> *dataIn);
+    void setFullDataIn(QByteArray* dataIn);
     void setDelaysIn(QVector<int> *delaysIn);
     void setDataOut(QVector<QByteArray*> *dataOut);
     void setDelaysOut(QVector<int> *delaysOut);
     void setFolderName(QString folderName);
+    void setSizesIn(QVector<int> *sizesIn);
     //void setFileName(QString fileName);
     //void setSize(int size);
     //void setDelay(int delay);
     QVector<QByteArray*>* getDataIn();
+    QByteArray* getFullDataIn();
     QVector<int>* getDelaysIn();
     QVector<QByteArray*>* getDataOut();
     QVector<int>* getDelaysOut();
     QVector<int>* getSizesIn();
     QVector<int>* getSizesOut();
+    QVector<int>* getFullSizesIn();
+    QVector<int>* getFullDelaysIn();
     QString getFolderName();
     //int getSize();
     //int getDelay();
@@ -67,7 +72,10 @@ private:
 
     QString _folderName;
     QVector<QByteArray*> *_dataIn = nullptr;
+    QByteArray* _fullDataIn = nullptr;
     QVector<int> *_delaysIn = nullptr;
+    QVector<int> *_fullDelaysIn = nullptr;
+    QVector<int> *_fullSizesIn = nullptr;
     QVector<QByteArray*> *_dataOut = nullptr;
     QVector<int> *_delaysOut = nullptr;
 };

@@ -34,6 +34,7 @@ public slots:
 
     //void closeUSB();
     void refreshFrameOut();
+    void refreshSendingStatus(bool status);
 
 private slots:
 
@@ -76,10 +77,13 @@ private:
     void printToTextEdit(QVector<QByteArray*> *data, QTextEdit *textEdit);
     void printToTextEdit(QByteArray *text, QTextEdit *textEdit);
     void ptintDelays(Frame *frame, QTextEdit *textEdit);
-    QByteArray* scanFromTextEdit(QTextEdit *textEdit);    
+    QByteArray* scanFromTextEdit(QTextEdit *textEdit);
     QVector<int>* diff(QVector<int>* A, QVector<int>* B);
     QByteArray* diff(QByteArray* A, QByteArray* B);
     QVector<QByteArray*>* diff(QVector<QByteArray *> *A, QVector<QByteArray *> *B);
+    QByteArray* validateFrame(QString* inStr);
+    QByteArray* validateDelays(QString* inStr);
+
 
 };
 

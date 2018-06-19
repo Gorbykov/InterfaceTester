@@ -12,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     //usbDeviceController = new UsbDeviceController(this);
     ethernetController = new EthernetController(this);
+    ui->lineEditTimeout->setValidator(new QIntValidator(this));
 }
 
 MainWindow::~MainWindow()
@@ -31,8 +32,8 @@ void MainWindow::setFrame(Frame *newFrame)
         _frame = nullptr;
         return;
     }
-    printToTextEdit(_frame->getDataIn(),ui->textEditIn);    
-    printDelays(_frame->getDelaysIn(),_frame->getSizesIn(),ui->textEditInDelays);
+    printToTextEdit(_frame->getFullDataIn(),ui->textEditIn);
+    printDelays(_frame->getFullDelaysIn(),_frame->getFullSizesIn(),ui->textEditInDelays);
     //printToTextEdit(_frame->getDataOut(),ui->textEditOut);
     refreshFrameOut();
 }
@@ -87,25 +88,10 @@ void MainWindow::printToTextEdit(QByteArray *text, QTextEdit *textEdit)
 
 QByteArray* MainWindow::scanFromTextEdit(QTextEdit *textEdit)
 {
-    QByteArray* text;
-    QString inStr = textEdit->toPlainText();
-    if (_lastViewType == "HEX")
-    {
-        inStr.remove(QRegExp("[^{0-9a-fA-F}]*"));
-        if (inStr.length()%2 == 1)
-        {
-            QChar lastChar = inStr.back();
-            inStr.back() = '0';
-            inStr.append(lastChar);
-        }
-        text = new QByteArray( QByteArray::fromHex(inStr.toUtf8()));
-    }
-    else if(_lastViewType == "UTF-8")
-    {
-        text = new QByteArray(inStr.toUtf8());
-    }
-    return text;
+    QString* inStr = new QString(textEdit->toPlainText());
+    return validateFrame(inStr);
 }
+
 
 void MainWindow::on_actionSaveAll_triggered()
 {
@@ -176,6 +162,17 @@ void MainWindow::refreshFrameOut()
     printDelays(diff(_frame->getDelaysOut(),_frame->getDelaysIn()),diff(_frame->getSizesOut(),_frame->getSizesIn()),ui->textEditCompereDelays);
 }
 
+void MainWindow::refreshSendingStatus(bool status)
+{
+    if (status)
+    {
+        ui->labelSending->setText("On");
+    }
+    else
+    {
+        ui->labelSending->setText("Off");
+    }
+}
 
 QVector<int> *MainWindow::diff(QVector<int> *A, QVector<int> *B)
 {
@@ -308,6 +305,7 @@ void MainWindow::on_actionStart_triggered()
         case 0:
             break;
         case 1:
+            ethernetController->setTimeout(ui->lineEditTimeout->text().toInt());
             ethernetController->read(_frame);
             break;
         }
@@ -332,19 +330,29 @@ void MainWindow::on_pushButtonIn_clicked()
     {
         inSelect = 1;
     }
-
+    bool ok = false;
     switch (inSelect) {
     case 0:
         if(_frame != nullptr)
         {
+            ok = true;
         }
         break;
     case 1:
         if(_frame != nullptr)
         {
-            ethernetController->startInSession();
+           ok = ethernetController->startInSession();
         }
         break;
+    }
+
+    if (ok)
+    {
+        ui->labelInOpen->setText("On");
+    }
+    else
+    {
+        ui->labelInOpen->setText("Off");
     }
 }
 
@@ -360,18 +368,28 @@ void MainWindow::on_pushButtonOut_clicked()
         outSelect = 1;
     }
 
+    bool ok = false;
     switch (outSelect) {
     case 0:
         if(_frame != nullptr)
         {
+            ok = true;
         }
         break;
     case 1:
         if(_frame != nullptr)
         {
-            ethernetController->startOutSession();
+            ok = ethernetController->startOutSession();
         }
         break;
+    }
+    if (ok)
+    {
+        ui->labelInOpen->setText("On");
+    }
+    else
+    {
+        ui->labelInOpen->setText("Off");
     }
 }
 
@@ -383,5 +401,42 @@ void MainWindow::on_pushButtonStart_clicked()
 void MainWindow::on_pushButtonEnd_clicked()
 {
     //usbDeviceController->endSession();
+
+    ui->labelInOpen->setText("Off");
+    ui->labelOutOpen->setText("Off");
     ethernetController->endSession();
+}
+
+
+QByteArray* MainWindow::validateFrame(QString *inStr)
+{
+    QByteArray *text;
+    if (_lastViewType == "HEX")
+    {
+        inStr->remove(QRegExp("[^{0-9a-fA-F}]*"));
+        if (inStr->length()%2 == 1)
+        {
+            QChar lastChar = inStr->back();
+            inStr->back() = '0';
+            inStr->append(lastChar);
+        }
+        text = new QByteArray( QByteArray::fromHex(inStr->toUtf8()));
+    }
+    else if(_lastViewType == "UTF-8")
+    {
+        text = new QByteArray(inStr->toUtf8());
+    }
+    delete inStr;
+    return text;
+}
+
+QByteArray* MainWindow::validateDelays(QString *inStr)
+{
+    QByteArray *text;
+    QRegExpValidator validator;
+    validator.setRegExp(QRegExp("([0-9]+ [0-9]+)\n?"));
+    validator.fixup(*inStr);
+    text = new QByteArray(inStr->toUtf8());
+    delete inStr;
+    return text;
 }

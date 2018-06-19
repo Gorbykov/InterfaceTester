@@ -127,6 +127,24 @@ void Frame::setFolderName(QString folderName)
 }
 
 
+void Frame::setSizesIn(QVector<int> *sizesIn)
+{
+    if(_fullDataIn == nullptr)
+    {
+        return;
+    }
+}
+
+void Frame::setFullDataIn(QByteArray *dataIn)
+{
+    _fullDataIn = dataIn;
+}
+
+QByteArray* Frame::getFullDataIn()
+{
+    return _fullDataIn;
+}
+
 QVector<QByteArray*>* Frame::getDataIn()
 {
     return _dataIn;
@@ -169,6 +187,16 @@ QVector<int>* Frame::getSizesOut()
 QString Frame::getFolderName()
 {
     return _folderName;
+}
+
+QVector<int>* Frame::getFullSizesIn()
+{
+    return _fullSizesIn;
+}
+
+QVector<int>* Frame::getFullDelaysIn()
+{
+    return _fullSizesIn;
 }
 
 bool Frame::saveAll()
@@ -246,10 +274,11 @@ bool Frame::_save(QString folderName, Direction direction)
     {
         dataFileName = DEFAULT_IN;
         delaysFileName = DEFAULT_IN_DELAYS;
-        if (_delaysIn != nullptr && _dataIn != nullptr)
+        if (_fullDelaysIn != nullptr && _fullDataIn != nullptr)
         {
-            delays = _delaysIn;
-            data = _dataIn;
+            delays = _fullDelaysIn;
+            data = new QVector<QByteArray*>();
+            data->push_back(_fullDataIn);
             sizes = getSizesIn();
         }
     }
@@ -289,6 +318,9 @@ bool Frame::_save(QString folderName, Direction direction)
     for(int i = 0; i<data->size(); i++)
     {
         dataStream.writeRawData(data->at(i)->data(),data->at(i)->size());
+    }
+    for(int i = 0; i<sizes->size(); i++)
+    {
         delaysStream << (*sizes)[i] << " " << (*delays)[i] << "\r\n";
     }
 
@@ -338,6 +370,10 @@ bool Frame::_open(QString folderName,  Direction direction)
     }
 
     QByteArray dataAll = dataFile.readAll();
+    if(direction == Direction::in)
+    {
+        _fullDataIn = new QByteArray(dataAll);
+    }
     QTextStream delaysStram(&delaysFile);
     QVector<int> sizes;
 
@@ -348,8 +384,14 @@ bool Frame::_open(QString folderName,  Direction direction)
         sizes.push_back(parameters.at(0).toInt());
         delays->push_back(parameters.at(1).toInt());
     }
+    if(direction == Direction::in)
+    {
+        _fullDelaysIn= delays;
+        _fullSizesIn = new QVector<int> (sizes);
+    }
     int p = 0;
-    for (int i = 0; (i<sizes.size());i++)
+    int i = 0;
+    for (i = 0; (i<sizes.size());i++)
     {
         if (p+sizes[i] > dataAll.size())
         {
@@ -358,6 +400,8 @@ bool Frame::_open(QString folderName,  Direction direction)
         data->push_back(new QByteArray(dataAll.mid(p,sizes[i])));
         p +=sizes[i];
     }
+    sizes = sizes.mid(0,i);
+    delays = new QVector<int>(delays->mid(0,i));
     dataFile.close();
     delaysFile.close();
     if(direction == Direction::in)

@@ -25,6 +25,16 @@ void EthernetController::setRSocket(FullAddress *rAddress)
     //connect(_rSocket, &QUdpSocket::readyRead, this, &EthernetController::handleReadyRead);
 }
 
+void EthernetController::setTimeout(int timeout)
+{
+    _timeout = timeout;
+}
+
+int EthernetController::getTimeout()
+{
+    return _timeout;
+}
+
 FullAddress* EthernetController::getTAddress()
 {
     return _tAddress;
@@ -49,6 +59,10 @@ bool EthernetController::startInSession()
 {
     this->endInSession();
     _tSocket =  new QUdpSocket(parent());
+    if(_tAddress == nullptr)
+    {
+        return false;
+    }
     _tSocket->bind(_tAddress->ip,_tAddress->port);
     if (_tSocket->isValid())
     {
@@ -63,6 +77,10 @@ bool EthernetController::startOutSession()
 {
     this->endOutSession();
     _rSocket =  new QUdpSocket(parent());
+    if(_rAddress == nullptr)
+    {
+        return false;
+    }
     connect(_rSocket, &QUdpSocket::readyRead, this, &EthernetController::handleReadyRead);
     _rSocket->bind(_rAddress->ip,_rAddress->port);
     if (_rSocket->isValid())
@@ -163,8 +181,9 @@ void EthernetController::read(Frame *currentFrame)
     _currentFrame->setDelaysOut(_readDelays);
     _readData = new QVector<QByteArray*>();
     _currentFrame->setDataOut(_readData);
-    _timer.setSingleShot(true);
-    _timer.start(TIMEOUT);
+    _timer.setSingleShot(true);    
+    emit refreshSendingStatus(true);
+    _timer.start(_timeout);
 }
 
 
@@ -179,8 +198,8 @@ void EthernetController::handleReadyRead()
     _readData->push_back(new QByteArray(_rSocket->pendingDatagramSize(),'/0'));
     _rSocket->readDatagram(_readData->back()->data(),_readData->back()->size());
     _currentFrame->setDataOut(_readData);
-    _readDelays->push_back(TIMEOUT - _timer.remainingTime());
-    _timer.start(TIMEOUT);
+    _readDelays->push_back(_timeout - _timer.remainingTime());
+    _timer.start(_timeout);
     _currentFrame->setDelaysOut(_readDelays);
     emit refreshFrameOut();
     //qDebug()<<(QString::fromUtf8( _readData))<<"/n";
@@ -188,7 +207,7 @@ void EthernetController::handleReadyRead()
 
 void EthernetController::handleTimeout()
 {
-
+    emit refreshSendingStatus(false);
     //handleReadyRead();
     //disconnect(_rSocket, &QUdpSocket::readyRead, this, &EthernetController::handleReadyRead);
     //endSession();

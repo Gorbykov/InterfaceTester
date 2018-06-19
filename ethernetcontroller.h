@@ -6,7 +6,7 @@
 #include <QtCore>
 #include "frame.h"
 
-#define TIMEOUT 10000
+//#define TIMEOUT 10000
 
 
 struct FullAddress
@@ -43,10 +43,13 @@ public:
     QUdpSocket* getRSocket();
     FullAddress* getTAddress();
     FullAddress* getRAddress();
+    int getTimeout();
+    void setTimeout(int timeout);
     void setTSocket( FullAddress *tAddress);
     void setRSocket( FullAddress *rAddress);
 signals:
     void refreshFrameOut();
+    void refreshSendingStatus(bool status);
 
 private:
     QUdpSocket *_tSocket = nullptr;
@@ -58,6 +61,7 @@ private:
     QTimer _timer;
     Frame* _currentFrame;
     int _delaysPointer = 0;
+    int _timeout = 10000;
     bool _inReady = false;
     bool _outReady = false;
 

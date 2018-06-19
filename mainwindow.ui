@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>793</width>
-    <height>555</height>
+    <width>854</width>
+    <height>681</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,7 +20,7 @@
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
-   <layout class="QHBoxLayout" name="horizontalLayout_4">
+   <layout class="QHBoxLayout" name="horizontalLayout_7">
     <item>
      <widget class="QSplitter" name="splitter">
       <property name="sizePolicy">
@@ -61,7 +61,7 @@
            </font>
           </property>
           <property name="readOnly">
-           <bool>false</bool>
+           <bool>true</bool>
           </property>
           <property name="tabStopWidth">
            <number>48</number>
@@ -134,7 +134,7 @@
            </font>
           </property>
           <property name="readOnly">
-           <bool>false</bool>
+           <bool>true</bool>
           </property>
           <property name="tabStopWidth">
            <number>48</number>
@@ -224,10 +224,39 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButtonStart">
-        <property name="text">
-         <string>Отправить по...</string>
+       <layout class="QHBoxLayout" name="horizontalLayout_6">
+        <item>
+         <widget class="QPushButton" name="pushButtonStart">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>Отправить по...</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="labelSending">
+          <property name="text">
+           <string>Off</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="groupBox">
+        <property name="title">
+         <string>Таймаут</string>
         </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <item>
+          <widget class="QLineEdit" name="lineEditTimeout"/>
+         </item>
+        </layout>
        </widget>
       </item>
       <item>
@@ -237,11 +266,28 @@
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_3">
          <item>
-          <widget class="QPushButton" name="pushButtonIn">
-           <property name="text">
-            <string>Открыть передатчик</string>
-           </property>
-          </widget>
+          <layout class="QHBoxLayout" name="horizontalLayout_4">
+           <item>
+            <widget class="QPushButton" name="pushButtonIn">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Открыть передатчик</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="labelInOpen">
+             <property name="text">
+              <string>Off</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
          <item>
           <widget class="QRadioButton" name="radioButtonEthIn">
@@ -270,11 +316,34 @@
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_4">
          <item>
-          <widget class="QPushButton" name="pushButtonOut">
-           <property name="text">
-            <string>Слушать прием</string>
-           </property>
-          </widget>
+          <layout class="QHBoxLayout" name="horizontalLayout_5">
+           <item>
+            <widget class="QPushButton" name="pushButtonOut">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Слушать прием</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="labelOutOpen">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Off</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
          <item>
           <widget class="QRadioButton" name="radioButtonEthOut">
@@ -325,8 +394,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>793</width>
-     <height>20</height>
+     <width>854</width>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_2">
