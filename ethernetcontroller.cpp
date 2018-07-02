@@ -12,17 +12,16 @@ EthernetController::~EthernetController()
     endSession();
 }
 
-void EthernetController::setTSocket( FullAddress *tAddress)
+void EthernetController::setTSocket(FullAddress *tPCAddress,FullAddress *rDevAddress)
 {
-    //_tSocket = tSocket;
-    _tAddress = tAddress;
+    _tPCAddress = tPCAddress;
+    _rDevAddress = rDevAddress;
 }
 
-void EthernetController::setRSocket(FullAddress *rAddress)
+void EthernetController::setRSocket(FullAddress *tDevAddress, FullAddress *rPCAddress)
 {
-    //_rSocket = rSocket;
-    _rAddress = rAddress;
-    //connect(_rSocket, &QUdpSocket::readyRead, this, &EthernetController::handleReadyRead);
+    _rPCAddress = rPCAddress;
+    _tDevAddress = tDevAddress;
 }
 
 void EthernetController::setTimeout(int timeout)
@@ -35,38 +34,42 @@ int EthernetController::getTimeout()
     return _timeout;
 }
 
-FullAddress* EthernetController::getTAddress()
+FullAddress* EthernetController::getTPCAddress()
 {
-    return _tAddress;
+    return _tPCAddress;
 }
 
-FullAddress* EthernetController::getRAddress()
+FullAddress* EthernetController::getRPCAddress()
 {
-    return _rAddress;
+    return _rPCAddress;
 }
 
-QUdpSocket* EthernetController::getTSocket()
+FullAddress* EthernetController::getTDevAddress()
 {
-    return _tSocket;
+    return _tDevAddress;
 }
 
-QUdpSocket* EthernetController::getRSocket()
+FullAddress* EthernetController::getRDevAddress()
 {
-    return _rSocket;
+    return _rDevAddress;
 }
 
 bool EthernetController::startInSession()
 {
     this->endInSession();
-    _tSocket =  new QUdpSocket(parent());
-    if(_tAddress == nullptr)
+    _tPCSocket =  new QUdpSocket(parent());
+    if(_tPCAddress == nullptr)
     {
         return false;
     }
-    _tSocket->bind(_tAddress->ip,_tAddress->port);
-    if (_tSocket->isValid())
+    if(_rDevAddress == nullptr)
     {
-        _tAddress->port = _tSocket->localPort();
+        _rDevAddress = new FullAddress(QHostAddress::Broadcast,65535);
+    }
+    _tPCSocket->bind(_tPCAddress->ip,_tPCAddress->port);
+    if (_tPCSocket->isValid())
+    {
+        _tPCAddress->port = _tPCSocket->localPort();
         _inReady = true;
         return true;
     }
@@ -76,36 +79,36 @@ bool EthernetController::startInSession()
 bool EthernetController::startOutSession()
 {
     this->endOutSession();
-    _rSocket =  new QUdpSocket(parent());
-    if(_rAddress == nullptr)
+    _rPCSocket =  new QUdpSocket(parent());
+    if(_rPCAddress == nullptr)
     {
         return false;
     }
-    connect(_rSocket, &QUdpSocket::readyRead, this, &EthernetController::handleReadyRead);
-    _rSocket->bind(_rAddress->ip,_rAddress->port);
-    if (_rSocket->isValid())
+    connect(_rPCSocket, &QUdpSocket::readyRead, this, &EthernetController::handleReadyRead);
+    _rPCSocket->bind(_rPCAddress->ip,_rPCAddress->port);
+    if (_rPCSocket->isValid())
     {
-        _rAddress->port = _rSocket->localPort();
+        _rPCAddress->port = _rPCSocket->localPort();
         _outReady = true;
         return true;
     }
     return false;
 }
 
-bool EthernetController::startSession()
+bool EthernetController::startInOutSession()
 {
-    return startInSession() && startOutSession();
+
 }
 
 
 bool EthernetController::isInReady()
 {
-    return (_tSocket != nullptr) && _inReady;
+    return (_tPCSocket != nullptr) && _inReady;
 }
 
 bool EthernetController::isOutReady()
 {
-    return (_rSocket != nullptr) && _outReady;
+    return (_rPCSocket != nullptr) && _outReady;
 }
 
 void EthernetController::endSession()
@@ -116,24 +119,24 @@ void EthernetController::endSession()
 
 void EthernetController::endInSession()
 {
-    if (_tSocket != nullptr)
+    if (_tPCSocket != nullptr)
     {
-        _tSocket->close();
-        delete _tSocket;
-        _tSocket = nullptr;
+        _tPCSocket->close();
+        delete _tPCSocket;
+        _tPCSocket = nullptr;
     }
     _inReady = false;
 }
 
 void EthernetController::endOutSession()
 {
-    if(_rSocket != nullptr)
+    if(_rPCSocket != nullptr)
     {
-        disconnect(_rSocket, &QUdpSocket::readyRead, this, &EthernetController::handleReadyRead);
+        disconnect(_rPCSocket, &QUdpSocket::readyRead, this, &EthernetController::handleReadyRead);
 
-        _rSocket->close();
-        delete _rSocket;
-        _rSocket = nullptr;
+        _rPCSocket->close();
+        delete _rPCSocket;
+        _rPCSocket = nullptr;
     }
     _outReady = false;
 }
@@ -160,7 +163,7 @@ void EthernetController::write(Frame *currentFrame)
 
 void EthernetController::writePacket()
 {
-    _tSocket->writeDatagram(*(_currentFrame->getDataIn()->at(_delaysPointer)),_rAddress->ip,_rAddress->port);
+    _tPCSocket->writeDatagram(*(_currentFrame->getDataIn()->at(_delaysPointer)),_rDevAddress->ip,_rDevAddress->port);
     _delaysPointer++;
     if(_delaysPointer<_currentFrame->getDelaysIn()->size())
     {
@@ -195,8 +198,8 @@ void EthernetController::handleReadyRead()
     //    _currentFrame->setDelaysOut(_readDelays);
     //    emit refreshFrameIn();
     //    _timer.start(TIMEOUT);
-    _readData->push_back(new QByteArray(_rSocket->pendingDatagramSize(),'/0'));
-    _rSocket->readDatagram(_readData->back()->data(),_readData->back()->size());
+    _readData->push_back(new QByteArray(_rPCSocket->pendingDatagramSize(),'/0'));
+    _rPCSocket->readDatagram(_readData->back()->data(),_readData->back()->size());
     _currentFrame->setDataOut(_readData);
     _readDelays->push_back(_timeout - _timer.remainingTime());
     _timer.start(_timeout);

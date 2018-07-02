@@ -250,14 +250,14 @@ void MainWindow::closeSocket()
     ethernetController->endSession();
 }
 
-void MainWindow::setTSocket(FullAddress *tAddress)
+void MainWindow::setTSocket(FullAddress *tPCAddress, FullAddress *rDevAddress)
 {
-    ethernetController->setTSocket(tAddress);
+    ethernetController->setTSocket(tPCAddress, rDevAddress);
 }
 
-void MainWindow::setRSocket(FullAddress *rAddress)
+void MainWindow::setRSocket(FullAddress *tDevAddress, FullAddress *rPCAddress)
 {
-    ethernetController->setRSocket(rAddress);
+    ethernetController->setRSocket(tDevAddress, rPCAddress);
 }
 
 void MainWindow::on_actionEthStart_triggered()

@@ -5,40 +5,52 @@ EthernetSettingWindow::EthernetSettingWindow(QWidget *parent, EthernetController
     QDialog(parent),
     ui(new Ui::EthernetSettingWindow)
 {
-    connect(this, SIGNAL(setTSocket(FullAddress*)),parent,SLOT(setTSocket(FullAddress*)));
-    connect(this, SIGNAL(setRSocket(FullAddress*)),parent,SLOT(setRSocket(FullAddress*)));
+    connect(this, SIGNAL(setTSocket(FullAddress*,FullAddress*)),parent,SLOT(setTSocket(FullAddress*,FullAddress*)));
+    connect(this, SIGNAL(setRSocket(FullAddress*,FullAddress*)),parent,SLOT(setRSocket(FullAddress*,FullAddress*)));
     connect(this, SIGNAL(closeSocket()),parent,SLOT(closeRSocket()));
     ui->setupUi(this);
     //QUdpSocket* tSocket = ethernetController->getTSocket();
     //QUdpSocket* rSocket = ethernetController->getRSocket();
-    FullAddress* tAddress = ethernetController->getTAddress();
-    FullAddress* rAddress = ethernetController->getRAddress();
+    FullAddress* tPCAddress = ethernetController->getTPCAddress();
+    FullAddress* rPCAddress = ethernetController->getRPCAddress();
+    FullAddress* tDevAddress = ethernetController->getTDevAddress();
+    FullAddress* rDevAddress = ethernetController->getRDevAddress();
 
-    ui->lineEditPort->setValidator(new QIntValidator(1,65535,this));
+    ui->lineEditPortR ->setValidator(new QIntValidator(1,65535,this));
+    ui->lineEditPortT ->setValidator(new QIntValidator(1,65535,this));
     QString oIpRange = "(?:[0-1]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])";
     QRegExp oIpRegex ("^" + oIpRange
                       + "\\." + oIpRange
                       + "\\." + oIpRange
                       + "\\." + oIpRange + "$");
-    ui->lineEditIp->setValidator(new QRegExpValidator(oIpRegex));
+    ui->lineEditIpT->setValidator(new QRegExpValidator(oIpRegex));
+    ui->lineEditIpR->setValidator(new QRegExpValidator(oIpRegex));
     //QUdpSocket *socket = nullptr;
-    FullAddress *address = nullptr;
+    FullAddress *rAddress = nullptr;
+    FullAddress *tAddress = nullptr;
     _type = type;
     if (_type == 'r')
     {
-        //socket = rSocket;
-        address = rAddress;
+        ui->labelT->setText("Выход устройства");
+        ui->labelR->setText("Вход компьютера");
+        rAddress = rPCAddress;
+        tAddress = tDevAddress;
     }
     if (_type == 't')
     {
         //socket = tSocket;
-        address = tAddress;
+        ui->labelT->setText("Выход компьютера");
+        ui->labelR->setText("Вход устройства");
+        rAddress = rDevAddress;
+        tAddress = tPCAddress;
     }
 
-    if (address!=nullptr)
+    if (rAddress!=nullptr && tAddress!=nullptr)
     {
-        ui->lineEditIp->setText(address->ip.toString());
-        ui->lineEditPort->setText(QString::number(address->port));
+        ui->lineEditIpT->setText(tAddress->ip.toString());
+        ui->lineEditPortT->setText(QString::number(tAddress->port));
+        ui->lineEditIpR->setText(rAddress->ip.toString());
+        ui->lineEditPortR->setText(QString::number(rAddress->port));
        // _currentSocket = socket;
     }
 }
@@ -52,20 +64,24 @@ EthernetSettingWindow::~EthernetSettingWindow()
 void EthernetSettingWindow::on_pushButtonOK_clicked()
 {
 
-    QHostAddress ip = QHostAddress(ui->lineEditIp->text());
-    int port = ui->lineEditPort->text().toInt();
+    QHostAddress ip = QHostAddress(ui->lineEditIpT->text());
+    int port = ui->lineEditPortT->text().toInt();
     //QUdpSocket *socket = new QUdpSocket(parent());
     //if (socket ->bind(ip,port))
-    FullAddress *address = new FullAddress(ip,port);
+    FullAddress *tAddress = new FullAddress(ip,port);
+
+    ip = QHostAddress(ui->lineEditIpR->text());
+    port = ui->lineEditPortR->text().toInt();
+    FullAddress *rAddress = new FullAddress(ip,port);
     {
         if (_type == 'r')
         {
-            emit setRSocket(address);
+            emit setRSocket(rAddress,tAddress);
             emit close();
         }
         if (_type == 't')
         {
-            emit setTSocket(address);
+            emit setTSocket(rAddress,tAddress);
             emit close();
         }
     }

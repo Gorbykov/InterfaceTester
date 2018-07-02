@@ -18,8 +18,8 @@ public:
     ~EthernetSettingWindow();
 private:
 signals:
-    void setTSocket(FullAddress* tAddress);
-    void setRSocket(FullAddress* rAddress);
+    void setTSocket(FullAddress *tPCAddress, FullAddress *rDevAddress);
+    void setRSocket(FullAddress *tDevAddress, FullAddress *rPCAddress);
     void closeSocket();
 
 

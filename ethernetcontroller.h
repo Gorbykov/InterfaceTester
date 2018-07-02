@@ -29,33 +29,38 @@ public:
     void read(Frame* currentFrame);
     void write(Frame* currentFrame);
 
-    bool startSession();
+    bool startInOutSession();
     bool startInSession();
     bool startOutSession();
-    void endSession();
+    void endInOutSession();
     void endInSession();
     void endOutSession();
+    void endSession();
 
     bool isInReady();
     bool isOutReady();
 
-    QUdpSocket* getTSocket();
-    QUdpSocket* getRSocket();
-    FullAddress* getTAddress();
-    FullAddress* getRAddress();
+//    QUdpSocket* getTSocket();
+//    QUdpSocket* getRSocket();
+    FullAddress* getTPCAddress();
+    FullAddress* getRPCAddress();
+    FullAddress* getTDevAddress();
+    FullAddress* getRDevAddress();
     int getTimeout();
     void setTimeout(int timeout);
-    void setTSocket( FullAddress *tAddress);
-    void setRSocket( FullAddress *rAddress);
+    void setTSocket(FullAddress *tPCAddress, FullAddress *rDevAddress);
+    void setRSocket(FullAddress *tDevAddress, FullAddress *rPCAddress);
 signals:
     void refreshFrameOut();
     void refreshSendingStatus(bool status);
 
 private:
-    QUdpSocket *_tSocket = nullptr;
-    FullAddress *_tAddress = nullptr;
-    FullAddress *_rAddress = nullptr;
-    QUdpSocket *_rSocket = nullptr;
+    QUdpSocket *_tPCSocket = nullptr;
+    FullAddress *_tPCAddress = nullptr;
+    QUdpSocket *_rPCSocket = nullptr;
+    FullAddress *_rPCAddress = nullptr;
+    FullAddress *_tDevAddress = nullptr;
+    FullAddress *_rDevAddress = nullptr;
     QVector<QByteArray*>* _readData = nullptr;
     QVector<int>* _readDelays = nullptr;
     QTimer _timer;
