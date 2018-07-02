@@ -196,7 +196,7 @@ QVector<int>* Frame::getFullSizesIn()
 
 QVector<int>* Frame::getFullDelaysIn()
 {
-    return _fullSizesIn;
+    return _fullDelaysIn;
 }
 
 bool Frame::saveAll()
@@ -279,7 +279,7 @@ bool Frame::_save(QString folderName, Direction direction)
             delays = _fullDelaysIn;
             data = new QVector<QByteArray*>();
             data->push_back(_fullDataIn);
-            sizes = getSizesIn();
+            sizes = _fullSizesIn;
         }
     }
     else if(direction == Direction::out)

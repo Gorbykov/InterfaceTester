@@ -61,7 +61,7 @@
            </font>
           </property>
           <property name="readOnly">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
           <property name="tabStopWidth">
            <number>48</number>
@@ -134,7 +134,7 @@
            </font>
           </property>
           <property name="readOnly">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
           <property name="tabStopWidth">
            <number>48</number>
@@ -240,6 +240,12 @@
         </item>
         <item>
          <widget class="QLabel" name="labelSending">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text">
            <string>Off</string>
           </property>
@@ -276,12 +282,18 @@
               </sizepolicy>
              </property>
              <property name="text">
-              <string>Открыть передатчик</string>
+              <string>Включить передатчик</string>
              </property>
             </widget>
            </item>
            <item>
             <widget class="QLabel" name="labelInOpen">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="text">
               <string>Off</string>
              </property>
@@ -326,14 +338,14 @@
               </sizepolicy>
              </property>
              <property name="text">
-              <string>Слушать прием</string>
+              <string>Включить приемник</string>
              </property>
             </widget>
            </item>
            <item>
             <widget class="QLabel" name="labelOutOpen">
              <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
@@ -395,7 +407,7 @@
      <x>0</x>
      <y>0</y>
      <width>854</width>
-     <height>21</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_2">
@@ -405,7 +417,20 @@
     <addaction name="actionEhtTSettings"/>
     <addaction name="actionEhtRSettings"/>
    </widget>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>Кадры</string>
+    </property>
+    <addaction name="actionFrame"/>
+    <addaction name="actionSaveAll"/>
+    <addaction name="actionSaveIn"/>
+    <addaction name="actionSaveOut"/>
+    <addaction name="actionOpenIn"/>
+    <addaction name="actionOpenOut"/>
+    <addaction name="actionOpenAll"/>
+   </widget>
    <addaction name="menu_2"/>
+   <addaction name="menu"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -416,11 +441,12 @@
    </attribute>
    <addaction name="actionFrame"/>
    <addaction name="actionSaveAll"/>
+   <addaction name="actionOpenAll"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionFrame">
    <property name="text">
-    <string>Кадры</string>
+    <string>Открыть папку</string>
    </property>
    <property name="toolTip">
     <string>Настройка кадров передоваемых и получаемых с устройства</string>
@@ -444,7 +470,7 @@
   </action>
   <action name="actionEhtTSettings">
    <property name="text">
-    <string>Настройка EthT</string>
+    <string>Настройка Ethernet передатчика</string>
    </property>
    <property name="toolTip">
     <string>Настройка Ethernet передатчика</string>
@@ -452,7 +478,7 @@
   </action>
   <action name="actionEhtRSettings">
    <property name="text">
-    <string>Настройка EthR</string>
+    <string>Настройка Ethernet приемника</string>
    </property>
    <property name="toolTip">
     <string>Настройка Ethernet приемника</string>
@@ -488,6 +514,54 @@
    </property>
    <property name="toolTip">
     <string>Начать передачу по настраевыемым интерфейсам</string>
+   </property>
+  </action>
+  <action name="actionSaveIn">
+   <property name="text">
+    <string>Сохранить файлы передачи</string>
+   </property>
+   <property name="toolTip">
+    <string>Сохранить файлы отправляемые на устройство</string>
+   </property>
+  </action>
+  <action name="actionSaveOut">
+   <property name="text">
+    <string>Сохранить файлы приема</string>
+   </property>
+   <property name="toolTip">
+    <string>Сохранить файлы получаемые с устройства</string>
+   </property>
+  </action>
+  <action name="actionOpenIn">
+   <property name="text">
+    <string>Загрузить  файлы передачи</string>
+   </property>
+   <property name="toolTip">
+    <string>Открыть файлы отправляемые на устройство</string>
+   </property>
+  </action>
+  <action name="actionOpenOut">
+   <property name="text">
+    <string>Загрузить файлы приема</string>
+   </property>
+   <property name="toolTip">
+    <string>Загрузить файлы получаемые с устройства</string>
+   </property>
+  </action>
+  <action name="actionUpdateIn">
+   <property name="text">
+    <string>Обновить передаваемые данные</string>
+   </property>
+   <property name="toolTip">
+    <string>Сохранить текущие изменения передоваемых данных и подготовить их к отправке</string>
+   </property>
+  </action>
+  <action name="actionOpenAll">
+   <property name="text">
+    <string>Загрузить все</string>
+   </property>
+   <property name="toolTip">
+    <string>Загрузить входные и выходные файлы</string>
    </property>
   </action>
  </widget>

@@ -24,10 +24,6 @@ signals:
 
 
 private slots:
-    void on_buttonBox_accepted();
-
-    void on_buttonBox_clicked(QAbstractButton *button);
-
     void on_pushButtonOK_clicked();
 
     void on_pushButtonCancel_clicked();

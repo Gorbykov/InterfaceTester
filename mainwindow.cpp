@@ -12,7 +12,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     //usbDeviceController = new UsbDeviceController(this);
     ethernetController = new EthernetController(this);
+    connect(ethernetController, SIGNAL(refreshSendingStatus(bool)),this,SLOT(refreshSendingStatus(bool)) );
     ui->lineEditTimeout->setValidator(new QIntValidator(this));
+    ui->lineEditTimeout->setText("10000");
 }
 
 MainWindow::~MainWindow()
@@ -93,17 +95,12 @@ QByteArray* MainWindow::scanFromTextEdit(QTextEdit *textEdit)
 }
 
 
-void MainWindow::on_actionSaveAll_triggered()
-{
-    _frame->saveAll();
-}
-
 
 void MainWindow::on_actionUsbSettings_triggered()
 {
-//    usbSettingsWindow = new UsbSettingsWindow(this, usbDeviceController);
-//    usbSettingsWindow->setWindowTitle("Настройка USB");
-//    usbSettingsWindow->show();
+    //    usbSettingsWindow = new UsbSettingsWindow(this, usbDeviceController);
+    //    usbSettingsWindow->setWindowTitle("Настройка USB");
+    //    usbSettingsWindow->show();
 }
 
 void MainWindow::on_actionEhtTSettings_triggered()
@@ -158,7 +155,7 @@ void MainWindow::refreshFrameOut()
     }
     printToTextEdit(_frame->getDataOut(),ui->textEditOut);
     printDelays(_frame->getDelaysOut(),_frame->getSizesOut(),ui->textEditOutDelays);
-    printToTextEdit(diff(_frame->getDataOut(),_frame->getDataIn()),ui->textEditCompere);    
+    printToTextEdit(diff(_frame->getDataOut(),_frame->getDataIn()),ui->textEditCompere);
     printDelays(diff(_frame->getDelaysOut(),_frame->getDelaysIn()),diff(_frame->getSizesOut(),_frame->getSizesIn()),ui->textEditCompereDelays);
 }
 
@@ -341,7 +338,7 @@ void MainWindow::on_pushButtonIn_clicked()
     case 1:
         if(_frame != nullptr)
         {
-           ok = ethernetController->startInSession();
+            ok = ethernetController->startInSession();
         }
         break;
     }
@@ -385,11 +382,11 @@ void MainWindow::on_pushButtonOut_clicked()
     }
     if (ok)
     {
-        ui->labelInOpen->setText("On");
+        ui->labelOutOpen->setText("On");
     }
     else
     {
-        ui->labelInOpen->setText("Off");
+        ui->labelOutOpen->setText("Off");
     }
 }
 
@@ -439,4 +436,87 @@ QByteArray* MainWindow::validateDelays(QString *inStr)
     text = new QByteArray(inStr->toUtf8());
     delete inStr;
     return text;
+}
+
+void MainWindow::on_actionSaveAll_triggered()
+{
+    if (_frame != nullptr)
+    {
+        _frame->saveAll();
+    }
+}
+
+void MainWindow::on_actionSaveIn_triggered()
+{
+    if (_frame != nullptr)
+    {
+        _frame->saveIn();
+    }
+}
+
+void MainWindow::on_actionSaveOut_triggered()
+{
+    if (_frame != nullptr)
+    {
+        _frame->saveOut();
+    }
+}
+
+void MainWindow::on_actionOpenIn_triggered()
+{
+    if(_frame==nullptr)
+    {
+        return;
+    }
+
+    if(!_frame->openIn())
+    {
+        QMessageBox::warning(0,"Ошибка открытия файлов","Невозможно открыть файлы");
+        delete _frame;
+        _frame = nullptr;
+        return;
+    }
+    printToTextEdit(_frame->getFullDataIn(),ui->textEditIn);
+    printDelays(_frame->getFullDelaysIn(),_frame->getFullSizesIn(),ui->textEditInDelays);
+    refreshFrameOut();
+}
+
+void MainWindow::on_actionOpenOut_triggered()
+{
+
+    if(_frame==nullptr)
+    {
+        return;
+    }
+
+    if(!_frame->openOut())
+    {
+        QMessageBox::warning(0,"Ошибка открытия файлов","Невозможно открыть файлы");
+        delete _frame;
+        _frame = nullptr;
+        return;
+    }
+    printToTextEdit(_frame->getFullDataIn(),ui->textEditIn);
+    printDelays(_frame->getFullDelaysIn(),_frame->getFullSizesIn(),ui->textEditInDelays);
+    refreshFrameOut();
+}
+
+void MainWindow::on_actionOpenAll_triggered()
+{
+
+    if(_frame==nullptr)
+    {
+        return;
+    }
+
+    if(!_frame->openAll())
+    {
+        QMessageBox::warning(0,"Ошибка открытия файлов","Невозможно открыть файлы");
+        delete _frame;
+        _frame = nullptr;
+        return;
+    }
+    printToTextEdit(_frame->getFullDataIn(),ui->textEditIn);
+    printDelays(_frame->getFullDelaysIn(),_frame->getFullSizesIn(),ui->textEditInDelays);
+    refreshFrameOut();
 }

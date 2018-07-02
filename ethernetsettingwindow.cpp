@@ -48,11 +48,6 @@ EthernetSettingWindow::~EthernetSettingWindow()
     delete ui;
 }
 
-void EthernetSettingWindow::on_buttonBox_accepted()
-{}
-
-void EthernetSettingWindow::on_buttonBox_clicked(QAbstractButton *button)
-{}
 
 void EthernetSettingWindow::on_pushButtonOK_clicked()
 {

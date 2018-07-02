@@ -65,6 +65,16 @@ private slots:
     void on_pushButtonOut_clicked();
 
 
+    void on_actionSaveIn_triggered();
+
+    void on_actionSaveOut_triggered();
+
+    void on_actionOpenIn_triggered();
+
+    void on_actionOpenOut_triggered();
+
+    void on_actionOpenAll_triggered();
+
 private:
     Frame *_frame = nullptr;
     QString _lastViewType = "HEX";
