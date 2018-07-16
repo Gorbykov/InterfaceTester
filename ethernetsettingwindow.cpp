@@ -76,12 +76,12 @@ void EthernetSettingWindow::on_pushButtonOK_clicked()
     {
         if (_type == 'r')
         {
-            emit setRSocket(rAddress,tAddress);
+            emit setRSocket(tAddress,rAddress);
             emit close();
         }
         if (_type == 't')
         {
-            emit setTSocket(rAddress,tAddress);
+            emit setTSocket(tAddress,rAddress);
             emit close();
         }
     }
