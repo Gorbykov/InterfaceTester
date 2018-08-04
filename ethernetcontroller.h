@@ -40,8 +40,6 @@ public:
     bool isInReady();
     bool isOutReady();
 
-//    QUdpSocket* getTSocket();
-//    QUdpSocket* getRSocket();
     FullAddress* getTPCAddress();
     FullAddress* getRPCAddress();
     FullAddress* getTDevAddress();

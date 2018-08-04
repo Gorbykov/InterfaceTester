@@ -28,9 +28,6 @@ public:
     void setDelaysOut(QVector<int> *delaysOut);
     void setFolderName(QString folderName);
     void setSizesIn(QVector<int> *sizesIn);
-    //void setFileName(QString fileName);
-    //void setSize(int size);
-    //void setDelay(int delay);
     QVector<QByteArray*>* getDataIn();
     QByteArray* getFullDataIn();
     QVector<int>* getDelaysIn();
@@ -41,13 +38,6 @@ public:
     QVector<int>* getFullSizesIn();
     QVector<int>* getFullDelaysIn();
     QString getFolderName();
-    //int getSize();
-    //int getDelay();
-    //QString getFrameName();
-    //QString getFileName();
-    //bool loadFile(QString fileName);
-    //bool saveFile(QString fileName);
-    //bool saveFile();
     bool saveAll();
     bool saveAll(QString folderName);
 

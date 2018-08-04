@@ -10,7 +10,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    //usbDeviceController = new UsbDeviceController(this);
     ethernetController = new EthernetController(this);
     connect(ethernetController, SIGNAL(refreshSendingStatus(bool)),this,SLOT(refreshSendingStatus(bool)) );
     ui->lineEditTimeout->setValidator(new QIntValidator(this));
@@ -36,19 +35,8 @@ void MainWindow::setFrame(Frame *newFrame)
     }
     printToTextEdit(_frame->getFullDataIn(),ui->textEditIn);
     printDelays(_frame->getFullDelaysIn(),_frame->getFullSizesIn(),ui->textEditInDelays);
-    //printToTextEdit(_frame->getDataOut(),ui->textEditOut);
     refreshFrameOut();
 }
-
-//void::MainWindow::setUSB(QSerialPort *newPort)
-//{
-//    //usbDeviceController->setDevice(newPort);
-//}
-
-//void::MainWindow::closeUSB()
-//{
-//   // usbDeviceController->endSession();
-//}
 
 
 void MainWindow::printDelays(QVector<int>* delays, QVector<int>* sizes,  QTextEdit *textEdit)
@@ -98,9 +86,6 @@ QByteArray* MainWindow::scanFromTextEdit(QTextEdit *textEdit)
 
 void MainWindow::on_actionUsbSettings_triggered()
 {
-    //    usbSettingsWindow = new UsbSettingsWindow(this, usbDeviceController);
-    //    usbSettingsWindow->setWindowTitle("Настройка USB");
-    //    usbSettingsWindow->show();
 }
 
 void MainWindow::on_actionEhtTSettings_triggered()
@@ -125,9 +110,6 @@ void MainWindow::on_actionUSBStart_triggered()
 {
     if(_frame != nullptr)
     {
-        //usbDeviceController->write(_frame);
-        //usbDeviceController->read(_frame);
-        //currentSerialPort->close();
     }
 }
 
@@ -140,8 +122,6 @@ void MainWindow::on_actionFrame_triggered()
 
 void MainWindow::on_charView_currentIndexChanged(const QString &arg1)
 {
-    //printToTextEdit(scanFromTextEdit(ui->textEditOut),ui->textEditOut);
-    //printToTextEdit(scanFromTextEdit(ui->textEditCompere),ui->textEditCompere);
     printToTextEdit(scanFromTextEdit(ui->textEditIn),ui->textEditIn);
     refreshFrameOut();
     _lastViewType = arg1;
@@ -266,7 +246,6 @@ void MainWindow::on_actionEthStart_triggered()
     {
         ethernetController->read(_frame);
         ethernetController->write(_frame);
-        //currentSerialPort->close();
     }
 }
 
@@ -397,8 +376,6 @@ void MainWindow::on_pushButtonStart_clicked()
 
 void MainWindow::on_pushButtonEnd_clicked()
 {
-    //usbDeviceController->endSession();
-
     ui->labelInOpen->setText("Off");
     ui->labelOutOpen->setText("Off");
     ethernetController->endSession();

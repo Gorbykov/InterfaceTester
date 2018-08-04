@@ -153,12 +153,6 @@ void EthernetController::write(Frame *currentFrame)
     {
         QTimer::singleShot(_currentFrame->getDelaysIn()->at(_delaysPointer),Qt::PreciseTimer,this,SLOT(writePacket()));
     }
-    //    for (int i =0; i<currentFrame->getDelaysIn()->size();i++)
-    //    {
-    //        QTimer::singleShot(_currentFrame->getDelaysIn()->at(i),Qt::PreciseTimer,[=]{
-    //            _tSocket->writeDatagram(*(_currentFrame->getDataIn()->at(i)),_rAddress->ip,_rAddress->port);
-    //        });
-    //    }
 }
 
 void EthernetController::writePacket()
@@ -190,12 +184,6 @@ void EthernetController::read(Frame *currentFrame)
 
 void EthernetController::handleReadyRead()
 {
-    //    _readData->push_back(new QByteArray(_currentSerialPort->readAll()));
-    //    _currentFrame->setDataOut(_readData);
-    //    _readDelays->push_back(TIMEOUT - _timer.remainingTime());
-    //    _currentFrame->setDelaysOut(_readDelays);
-    //    emit refreshFrameIn();
-    //    _timer.start(TIMEOUT);
     _readData->push_back(new QByteArray(_rPCSocket->pendingDatagramSize(),'/0'));
     _rPCSocket->readDatagram(_readData->back()->data(),_readData->back()->size());
     _currentFrame->setDataOut(_readData);
@@ -203,13 +191,9 @@ void EthernetController::handleReadyRead()
     _timer.start(_timeout);
     _currentFrame->setDelaysOut(_readDelays);
     emit refreshFrameOut();
-    //qDebug()<<(QString::fromUtf8( _readData))<<"/n";
 }
 
 void EthernetController::handleTimeout()
 {
     emit refreshSendingStatus(false);
-    //handleReadyRead();
-    //disconnect(_rSocket, &QUdpSocket::readyRead, this, &EthernetController::handleReadyRead);
-    //endSession();
 }

@@ -9,8 +9,6 @@ EthernetSettingWindow::EthernetSettingWindow(QWidget *parent, EthernetController
     connect(this, SIGNAL(setRSocket(FullAddress*,FullAddress*)),parent,SLOT(setRSocket(FullAddress*,FullAddress*)));
     connect(this, SIGNAL(closeSocket()),parent,SLOT(closeRSocket()));
     ui->setupUi(this);
-    //QUdpSocket* tSocket = ethernetController->getTSocket();
-    //QUdpSocket* rSocket = ethernetController->getRSocket();
     FullAddress* tPCAddress = ethernetController->getTPCAddress();
     FullAddress* rPCAddress = ethernetController->getRPCAddress();
     FullAddress* tDevAddress = ethernetController->getTDevAddress();
@@ -25,7 +23,6 @@ EthernetSettingWindow::EthernetSettingWindow(QWidget *parent, EthernetController
                       + "\\." + oIpRange + "$");
     ui->lineEditIpT->setValidator(new QRegExpValidator(oIpRegex));
     ui->lineEditIpR->setValidator(new QRegExpValidator(oIpRegex));
-    //QUdpSocket *socket = nullptr;
     FullAddress *rAddress = nullptr;
     FullAddress *tAddress = nullptr;
     _type = type;
@@ -38,7 +35,6 @@ EthernetSettingWindow::EthernetSettingWindow(QWidget *parent, EthernetController
     }
     if (_type == 't')
     {
-        //socket = tSocket;
         ui->labelT->setText("Выход компьютера");
         ui->labelR->setText("Вход устройства");
         rAddress = rDevAddress;
@@ -51,7 +47,12 @@ EthernetSettingWindow::EthernetSettingWindow(QWidget *parent, EthernetController
         ui->lineEditPortT->setText(QString::number(tAddress->port));
         ui->lineEditIpR->setText(rAddress->ip.toString());
         ui->lineEditPortR->setText(QString::number(rAddress->port));
-       // _currentSocket = socket;
+    }
+
+    if (_type == 'r')
+    {
+        ui->lineEditIpT->setEnabled(false);
+        ui->lineEditPortT->setEnabled(false);
     }
 }
 
@@ -66,8 +67,6 @@ void EthernetSettingWindow::on_pushButtonOK_clicked()
 
     QHostAddress ip = QHostAddress(ui->lineEditIpT->text());
     int port = ui->lineEditPortT->text().toInt();
-    //QUdpSocket *socket = new QUdpSocket(parent());
-    //if (socket ->bind(ip,port))
     FullAddress *tAddress = new FullAddress(ip,port);
 
     ip = QHostAddress(ui->lineEditIpR->text());
@@ -89,6 +88,5 @@ void EthernetSettingWindow::on_pushButtonOK_clicked()
 
 void EthernetSettingWindow::on_pushButtonCancel_clicked()
 {
-    //emit closeSocket();
     emit close();
 }
