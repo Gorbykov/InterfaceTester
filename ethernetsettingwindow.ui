@@ -70,8 +70,15 @@
    </item>
    <item row="0" column="2" rowspan="6">
     <widget class="QLabel" name="label">
+     <property name="font">
+      <font>
+       <pointsize>18</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
      <property name="text">
-      <string>  ➡  </string>
+      <string>➪</string>
      </property>
      <property name="textFormat">
       <enum>Qt::PlainText</enum>

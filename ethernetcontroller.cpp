@@ -178,8 +178,6 @@ void EthernetController::read(Frame *currentFrame)
         return;
     }
     _currentFrame = currentFrame;
-    delete _readData;
-    delete _readDelays;
     _readDelays = new QVector<int>();
     _currentFrame->setDelaysOut(_readDelays);
     _readData = new QVector<QByteArray*>();

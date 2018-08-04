@@ -238,7 +238,7 @@ QVector<QByteArray*>* MainWindow::diff(QVector<QByteArray *> *A, QVector<QByteAr
         }
         else
         {
-            (*C)[i] =diff(M->at(i),new QByteArray(M->at(i)->size(), (char)0x00));
+            (*C)[i] =M->at(i);
         }
 
     }
