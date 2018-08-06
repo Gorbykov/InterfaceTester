@@ -29,7 +29,7 @@ public:
     void read(Frame* currentFrame);
     void write(Frame* currentFrame);
 
-    bool startInOutSession();
+//    bool startInOutSession();
     bool startInSession();
     bool startOutSession();
     void endInOutSession();

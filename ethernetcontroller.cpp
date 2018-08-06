@@ -95,10 +95,10 @@ bool EthernetController::startOutSession()
     return false;
 }
 
-bool EthernetController::startInOutSession()
-{
+//bool EthernetController::startInOutSession()
+//{
 
-}
+//}
 
 
 bool EthernetController::isInReady()
